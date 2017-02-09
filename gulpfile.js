@@ -22,8 +22,7 @@ gulp.task('sonar', function (callback) {
 		token : "f03cb72e1cbaafc0466eb9c8d2fde0e4af9b55e5",
 		options : {
 			'sonar.projectBaseDir': './app',
-			'sonar.language':'php',
-			'sonar.sourceEncoding':'UTF-8'
+			'sonar.language':'php'
 		}
 	}, callback);
 });
