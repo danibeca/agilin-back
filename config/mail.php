@@ -54,8 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => env('MAIL_USERNAME', 'danibeca@okazo.co'), 'name' => env('MAIL_NAME', 'Okazo Developing')],
-
+    'from' => ['address' => 'danibeca@okazo.co', 'name' => env('MAIL_NAME', 'Okazo Developing')],
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol
@@ -120,5 +119,6 @@ return [
     */
 
     'pretend' => false,
+
 
 ];

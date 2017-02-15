@@ -41,6 +41,10 @@ trait ResponseHelper {
         return $this->setStatusCode(IlluResponse::HTTP_UNAUTHORIZED)->respondWithError($message);
     }
 
+    public function respondBadRequest($message = 'Bad Request')
+    {
+        return $this->setStatusCode(IlluResponse::HTTP_BAD_REQUEST)->respondWithError($message);
+    }
 
     public function respond($data, $headers = [])
     {

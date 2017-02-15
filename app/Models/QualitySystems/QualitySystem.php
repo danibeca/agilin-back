@@ -9,8 +9,8 @@ class QualitySystem extends Model {
     protected $table = 'quality_system';
     public $timestamps = false;
 
-    public function indicatorInstances()
+    public function externalMetrics()
     {
-        return $this->hasMany('Agilin\Models\Projects\Indicators\IndicatorInstance');
+        return $this->hasMany('Agilin\Models\QualitySystems\Metrics\ExternalMetric')->orderBy('level');
     }
 }

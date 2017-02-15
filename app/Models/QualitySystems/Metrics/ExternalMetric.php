@@ -3,11 +3,12 @@
 namespace Agilin\Models\QualitySystems\Metrics;
 
 use Illuminate\Database\Eloquent\Model;
+use JWadhams\JsonLogic;
 
 class ExternalMetric extends Model {
 
     protected $table = 'external_metric';
-    protected $appends = ['value','project_lines'];
+    protected $appends = ['value'];
     public $timestamps = false;
 
     public function getValueAttribute()
@@ -20,13 +21,26 @@ class ExternalMetric extends Model {
         return $result;
     }
 
-    public function getProjectLinesAttribute()
+    public function metric()
     {
-        $result = null;
-        if (isset($this->attributes['project_lines']))
+        return $this->belongsTo('Agilin\Models\QualitySystems\Metrics\Metric');
+    }
+
+    public function normalize($extenalMetrics)
+    {
+        $data = $this->normalization_data;
+        foreach (json_decode($data) as $key => $attribute)
         {
-            $result = $this->attributes['project_lines'];
+            if (substr($key, 0, 5) === "@this")
+            {
+                $data = str_replace($key . ".value", $this->value, $data);
+            }
+            if (substr($key, 0, 5) === "@ext_")
+            {
+                $metric_value = $extenalMetrics->where('code', substr($key, 5, strlen($key)))->first()->value;
+                $data = str_replace($key . ".value", $metric_value, $data);
+            }
         }
-        return $result;
+        $this->value = JsonLogic::apply(json_decode($this->normalization_rule), json_decode($data));
     }
 }

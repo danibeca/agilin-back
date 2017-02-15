@@ -2,6 +2,7 @@
 
 namespace Agilin\Models\Projects;
 
+use Agilin\Models\Projects\Indicators\BusinessIndicator;
 use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model {
@@ -16,32 +17,12 @@ class Account extends Model {
 
     public function calculateAccountIndicator()
     {
+        $qualityCodeIndicator = BusinessIndicator::find(1);
         $result = 0;
         foreach ($this->projects as $project)
         {
-            $qaSystem = $project->qualitySystem->first();
-            $indicatorInstance = $qaSystem->indicatorInstances->first();
-            $externalMetrics = $indicatorInstance->indicatorMetrics->pluck('externalMetric');
-
-            $wrapper = new $qaSystem->wrapper_class($qaSystem->username, $qaSystem->password, $qaSystem->pivot->api_server_url);
-            $externalMetricInstances = $wrapper->getExternalMetrics($project->name, $externalMetrics);
-            $projectLines = $wrapper->getProjectNumberOfLines($project->name);
-
-            foreach ($indicatorInstance->indicatorMetrics as $indicatorMetric)
-            {
-                $indicatorMetric->externalMetric->project_lines = $projectLines;
-                $value = $externalMetricInstances[$indicatorMetric->externalMetric->code];
-                if (isset($value))
-                {
-                    $indicatorMetric->externalMetric->value = $value;
-                }
-            }
-
-            $result += $indicatorInstance->calculate();
+            $result += $qualityCodeIndicator->calculate($project);
         }
-
         return $result / count($this->projects);
-
     }
-
 }

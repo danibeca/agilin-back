@@ -3,17 +3,19 @@
 namespace Agilin\Models\Security;
 
 
+use Agilin\Utils\Notifications\ResetPasswordNotification;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject as AuthenticatableUserContract;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract, AuthorizableContract, AuthenticatableUserContract {
 
-    use Authenticatable, CanResetPassword;
+    use Authenticatable, CanResetPassword, Notifiable;
 
 
     /**
@@ -82,5 +84,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
                 'id' => $this->id
             ]
         ];
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+
     }
 }

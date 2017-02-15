@@ -10,10 +10,6 @@ abstract class QualityPlatformWrapper {
     protected $username;
     protected $password;
     protected $serverAPI;
-    public static $DUPLICATELINES = 'duplicateLines';
-    public static $TECHNICALDEBTTIME = 'technicalDebtTime';
-    public static $FUNCTIONCOMPLEXITY = 'functionComplexity';
-
 
     public function __construct($username, $password, $serverAPI)
     {
@@ -23,9 +19,4 @@ abstract class QualityPlatformWrapper {
     }
 
     public abstract function getExternalMetrics($projectId, $metricCodes);
-
-    public abstract function getStandardMetricName($key);
-
-    public abstract function getProjectNumberOfLines($projectId);
-
 }

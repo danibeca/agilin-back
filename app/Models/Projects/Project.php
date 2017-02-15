@@ -14,10 +14,8 @@ class Project extends Model {
         return $this->belongsToMany('Agilin\Models\QualitySystems\QualitySystem', 'project_qa_system')->withPivot('api_server_url', 'password', 'username');
     }
 
-    public function getNumberOfLines()
+    public function businessIndicators()
     {
-        $qaSystem = $this->qualitySystem->first();
-        $wrapper = new $qaSystem->wrapper_class($qaSystem->username, $qaSystem->password, $qaSystem->pivot->api_server_url);
-        return $wrapper->getProjectNumberOfLines($this->name);
+        return $this->belongsToMany('Agilin\Models\Projects\Indicators\BusinessIndicator', 'indicator_instance');
     }
 }

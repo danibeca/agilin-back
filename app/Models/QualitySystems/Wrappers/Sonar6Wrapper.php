@@ -29,23 +29,6 @@ class Sonar6Wrapper extends QualityPlatformWrapper {
         return $this->getExternalMetricsWithMetricString($projectId, $stringMetrics);
     }
 
-    public function getProjectNumberOfLines($projectId){
-        return $this->getExternalMetricsWithMetricString($projectId, 'lines,')['lines'];
-    }
-
-
-
-
-    public function getStandardMetricName($key)
-    {
-        $metricNameMap = array(
-            "duplicated_lines_density" => QualityPlatformWrapper::$DUPLICATELINES,
-            "sqale_index" => QualityPlatformWrapper::$TECHNICALDEBTTIME,
-            "function_complexity" => QualityPlatformWrapper::$FUNCTIONCOMPLEXITY
-        );
-        return $metricNameMap[$key];
-    }
-
     public function transformMetric($metric)
     {
         return [
@@ -66,5 +49,4 @@ class Sonar6Wrapper extends QualityPlatformWrapper {
         }
         return $result;
     }
-
 }

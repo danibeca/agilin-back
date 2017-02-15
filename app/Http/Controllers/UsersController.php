@@ -2,8 +2,6 @@
 
 namespace Agilin\Http\Controllers;
 
-use Agilin\Models\Projects\Project;
-use Agilin\Models\QualitySystem\Metrics\MetricCalculator;
 use Illuminate\Http\Request;
 use Agilin\Models\Security\User;
 use Agilin\Utils\Transformers\UserTransformer;
@@ -27,14 +25,10 @@ class UsersController extends ApiController {
 
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = User::with('account')->find(1);
-        //return $user->account->calculateAccountIndicator();
-        return $this->respond([ 'data' =>[ 0 => [
-            'id' => $user->account->calculateAccountIndicator()
-            ]]
-        ]);
+        return $this->respond(['data' => [0 => ['id' => $user->account->calculateAccountIndicator()]]]);
     }
 
     public function show($id)

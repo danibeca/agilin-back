@@ -4,3 +4,9 @@ Homestead.yaml
 _ide_helper.php
 .tmp
 .idea
+.env
+install2.sql
+.sonar
+app/.sonar
+*.bak
+*.mwb

@@ -13,7 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => 'cors'], function () {
+Route::group(['middleware' => ['cors','web']], function () {
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('login','Auth\TokenAuthController@authenticate');
+    Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 });
