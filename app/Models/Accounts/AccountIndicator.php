@@ -49,9 +49,9 @@ class AccountIndicator extends Model {
     public function saveIndicator(Account $account, $value)
     {
         $date = Carbon::now()->format('Y-m-d');
-        $pivot = $this->accounts()->wherePivot('registered_date',$date)->get();
+        $pivot = $this->accounts()->where('account_id', $account->id)->wherePivot('registered_date',$date)->get();
         if($pivot->count() > 0){
-            $this->accounts()->wherePivot('registered_date',$date)->updateExistingPivot(1, ['value' => $value, 'registered_date' => $date]);
+            $this->accounts()->where('account_id', $account->id)->wherePivot('registered_date',$date)->updateExistingPivot($account->id, ['value' => $value, 'registered_date' => $date]);
         }else{
             $this->accounts()->save($account, ['value' => $value, 'registered_date' => $date]);
         }

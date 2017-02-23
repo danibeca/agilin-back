@@ -5,7 +5,9 @@ namespace Agilin\Models\Projects\Indicators;
 use Agilin\Models\Projects\Application;
 use Agilin\Models\QualitySystems\Metrics\Metric;
 use Agilin\Models\QualitySystems\Metrics\MetricRepository;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use JWadhams\JsonLogic;
 
 class BusinessIndicator extends Model {
@@ -30,11 +32,25 @@ class BusinessIndicator extends Model {
                 $data = str_replace($key . ".value", $metricRepository->getMetricValue($application, $metric), $data);
             }
         }
-        return JsonLogic::apply(json_decode($this->calculation_rule), json_decode($data));
+        $value =  JsonLogic::apply(json_decode($this->calculation_rule), json_decode($data));
+        $this->saveIndicator($application, $value);
+        return $value;
+    }
+
+    public function saveIndicator(Application $application, $value)
+    {
+        $date = Carbon::now()->format('Y-m-d');
+        $pivot = $this->applications()->where('application_id', $application->id)->wherePivot('registered_date',$date)->get();
+        if($pivot->count() > 0){
+            $this->applications()->where('application_id', $application->id)->wherePivot('registered_date',$date)->updateExistingPivot($application->id, ['value' => $value, 'registered_date' => $date]);
+        }else{
+            $this->applications()->save($application, ['value' => $value, 'registered_date' => $date]);
+        }
+
     }
 
     public function applications()
     {
-        return $this->belongsToMany('Agilin\Models\Projects\Application', 'indicator_instance');
+        return $this->belongsToMany('Agilin\Models\Projects\Application', 'indicator_instance')->withPivot('value','registered_date');;
     }
 }
