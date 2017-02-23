@@ -56,7 +56,7 @@ trait ResponseHelper {
         return $this->respond([
             'error' => [
                 'message' => $message,
-                'status_code' => $this->getStatusCode()
+                'statusCode' => $this->getStatusCode()
             ]
         ]);
     }

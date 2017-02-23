@@ -9,13 +9,8 @@ class Project extends Model {
     protected $table = 'project';
     public $timestamps = false;
 
-    public function qualitySystem()
+    public function applications()
     {
-        return $this->belongsToMany('Agilin\Models\QualitySystems\QualitySystem', 'project_qa_system')->withPivot('api_server_url', 'password', 'username');
-    }
-
-    public function businessIndicators()
-    {
-        return $this->belongsToMany('Agilin\Models\Projects\Indicators\BusinessIndicator', 'indicator_instance');
+        return $this->hasMany('Agilin\Models\Projects\Application')->with('qualitySystem');
     }
 }

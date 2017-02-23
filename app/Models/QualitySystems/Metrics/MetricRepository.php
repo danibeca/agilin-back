@@ -4,41 +4,42 @@
 namespace Agilin\Models\QualitySystems\Metrics;
 
 
+use Agilin\Models\Projects\Application;
 use Agilin\Models\Projects\Project;
 
 class MetricRepository {
 
-    public function getMetricValue(Project $project, Metric $metric)
+    public function getMetricValue(Application $application, Metric $metric)
     {
         $result = 0;
         $repo = $this->getRepo();
-        if (isset($repo[$metric->id . '@' . $project->id]))
+        if (isset($repo[$metric->id . '@' . $application->id]))
         {
-            $result = $repo[$metric->id . '@' . $project->id];
+            $result = $repo[$metric->id . '@' . $application->id];
         } else
         {
-            $result = $this->getMetricValueFromServer($project, $metric);
+            $result = $this->getMetricValueFromServer($application, $metric);
         }
         return $result;
     }
 
-    public function getMetricValueFromServer(Project $project, Metric $metric)
+    public function getMetricValueFromServer(Application $application, Metric $metric)
     {
-        $repo = $this->getRepoUpdated($project);
-        return $repo[$metric->id . '@' . $project->id];
+        $repo = $this->getRepoUpdated($application);
+        return $repo[$metric->id . '@' . $application->id];
     }
 
-    public function getRepoUpdated(Project $project)
+    public function getRepoUpdated(Application $application)
     {
-        return $this->updateRepo($this->getAllMetricFromServer($project), $project);
+        return $this->updateRepo($this->getAllMetricFromServer($application), $application);
     }
 
-    public function getAllMetricFromServer(Project $project)
+    public function getAllMetricFromServer(Application $application)
     {
-        $qaSystem = $project->qualitySystem->first();
-        $wrapper = new $qaSystem->wrapper_class($qaSystem->username, $qaSystem->password, $qaSystem->pivot->api_server_url);
+        $qaSystem = $application->qualitySystem->first();
+        $wrapper = new $qaSystem->wrapper_class($qaSystem->pivot->username, $qaSystem->pivot->password, $qaSystem->pivot->api_server_url);
         $externalMetrics = $qaSystem->externalMetrics;
-        $externalMetricValues = $wrapper->getExternalMetrics($project->name, $externalMetrics);
+        $externalMetricValues = $wrapper->getExternalMetrics($qaSystem->pivot->app_code, $externalMetrics);
         $externalMetricsNormalized = $this->assignExternalMetricValues($externalMetrics, $externalMetricValues);
 
         return $externalMetricsNormalized;
@@ -65,12 +66,12 @@ class MetricRepository {
         return session('metricRepository', array());
     }
 
-    public function updateRepo($externalMetricsNormalized, Project $project)
+    public function updateRepo($externalMetricsNormalized, Application $application)
     {
         $repo = $this->getRepo();
         foreach ($externalMetricsNormalized as $externalMetric)
         {
-            $repo[$externalMetric->metric->id . '@' . $project->id] = $externalMetric->value;
+            $repo[$externalMetric->metric->id . '@' . $application->id] = $externalMetric->value;
         }
         session(['metricRepository' => $repo]);
         return $repo;

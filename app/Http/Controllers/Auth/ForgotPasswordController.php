@@ -44,11 +44,7 @@ class ForgotPasswordController extends ApiController {
         {
             return $this->respondBadRequest();
         }
-        //$token = $this->broker()->createToken($user);
-        return $this->sendResetLinkEmail($request);
-        //return $this->respond(['data' => [0 => ['token' => $token]]]);
-        //return response()->json(Json::response(['token' => $token]));
-
-
+        $this->sendResetLinkEmail($request);
+        return $this->respond(['data' => [0]]);
     }
 }

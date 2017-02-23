@@ -1,5 +1,5 @@
 {
-  "name": "AgilinBack",
+  "name": "agilin-back",
   "private": true,
   "devDependencies": {
     "gulp": "^3.8.8"

@@ -45,8 +45,10 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         return (new CustomMailMessage)
-            ->line('You are receiving this email testing because we received a password reset request for your account.')
-            ->action('Reset Password', env('APP_FRONT').'/password/reset/'.$this->token)
-            ->line('If you did not request a password reset, no further action is required.');
+            ->greeting('Hola')
+            ->subject('Cambio de password')
+            ->line('Estas recibiendo este email, porque hemos recibido una solicitud de cambio de password para tu cuenta.')
+            ->action('Reinicia tu password', env('APP_FRONT').'/password/reset/'.$this->token)
+            ->line('Si no has realizado esta solicitud, por favor haga caso omiso de este mensaje.');
     }
 }
