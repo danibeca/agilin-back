@@ -1,6 +1,6 @@
 <?php
 
-namespace Agilin\Models\Projects;
+namespace Agilin\Models\System;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +16,6 @@ class Application extends Model {
 
     public function businessIndicators()
     {
-        return $this->belongsToMany('Agilin\Models\Projects\Indicators\BusinessIndicator', 'indicator_instance');
+        return $this->belongsToMany('Agilin\Models\System\Indicators\BusinessIndicator', 'indicator_instance');
     }
 }

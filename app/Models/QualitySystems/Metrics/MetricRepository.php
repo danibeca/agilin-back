@@ -4,8 +4,7 @@
 namespace Agilin\Models\QualitySystems\Metrics;
 
 
-use Agilin\Models\Projects\Application;
-use Agilin\Models\Projects\Project;
+use Agilin\Models\System\Application;
 
 class MetricRepository {
 

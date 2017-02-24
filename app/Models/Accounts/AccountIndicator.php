@@ -2,7 +2,7 @@
 
 namespace Agilin\Models\Accounts;
 
-use Agilin\Models\Projects\Indicators\BusinessIndicator;
+use Agilin\Models\System\Indicators\BusinessIndicator;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,9 +33,9 @@ class AccountIndicator extends Model {
         $qualityCodeIndicator = BusinessIndicator::find(1);
         $result = 0;
         $counter = 0;
-        foreach ($account->projects as $project)
+        foreach ($account->systems as $system)
         {
-            foreach ($project->applications as $application)
+            foreach ($system->applications as $application)
             {
                 $counter++;
                 $result += $qualityCodeIndicator->calculate($application);

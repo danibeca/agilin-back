@@ -2,8 +2,6 @@
 
 namespace Agilin\Models\Accounts;
 
-use Agilin\Models\Projects\Indicators\BusinessIndicator;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model {
@@ -11,9 +9,9 @@ class Account extends Model {
     protected $table = 'account';
     public $timestamps = false;
 
-    public function projects()
+    public function systems()
     {
-        return $this->hasMany('Agilin\Models\Projects\Project')->with('applications');
+        return $this->hasMany('Agilin\Models\System\System')->with('applications');
     }
 
     public function indicators()

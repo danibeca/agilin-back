@@ -3,8 +3,6 @@
 namespace Agilin\Models\QualitySystems\Wrappers;
 
 
-use Agilin\Models\QualitySystems\Metrics\ExternalMetric;
-
 abstract class QualityPlatformWrapper {
 
     protected $username;

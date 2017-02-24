@@ -1,13 +1,12 @@
 <?php
 
-namespace Agilin\Models\Projects\Indicators;
+namespace Agilin\Models\System\Indicators;
 
-use Agilin\Models\Projects\Application;
+use Agilin\Models\System\Application;
 use Agilin\Models\QualitySystems\Metrics\Metric;
 use Agilin\Models\QualitySystems\Metrics\MetricRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 use JWadhams\JsonLogic;
 
 class BusinessIndicator extends Model {
@@ -51,6 +50,6 @@ class BusinessIndicator extends Model {
 
     public function applications()
     {
-        return $this->belongsToMany('Agilin\Models\Projects\Application', 'indicator_instance')->withPivot('value','registered_date');;
+        return $this->belongsToMany('Agilin\Models\System\Application', 'indicator_instance')->withPivot('value','registered_date');;
     }
 }
