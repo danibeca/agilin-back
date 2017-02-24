@@ -32,6 +32,7 @@ class Handler extends ExceptionHandler {
 
     public function render($request, Exception $e)
     {
+
         if ($e instanceof ModelNotFoundException)
         {
             return $this->respondNotFound('Resource not found');

@@ -50,6 +50,6 @@ class BusinessIndicator extends Model {
 
     public function applications()
     {
-        return $this->belongsToMany('Agilin\Models\System\Application', 'indicator_instance')->withPivot('value','registered_date');;
+        return $this->belongsToMany('Agilin\Models\System\Application', 'indicator_instance')->withPivot('value','registered_date');
     }
 }

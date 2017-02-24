@@ -38,8 +38,9 @@ class ForgotPasswordController extends ApiController {
      */
     public function getResetToken(Request $request)
     {
-        $this->validate($request, ['email' => 'required|email']);
-        $user = User::where('email', $request->input('email'))->first();
+        $email = 'email';
+        $this->validate($request, [$email => 'required|email']);
+        $user = User::where($email, $request->input($email))->first();
         if ( ! $user)
         {
             return $this->respondBadRequest();

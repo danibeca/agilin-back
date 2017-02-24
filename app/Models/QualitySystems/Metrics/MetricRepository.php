@@ -39,9 +39,7 @@ class MetricRepository {
         $wrapper = new $qaSystem->wrapper_class($qaSystem->pivot->username, $qaSystem->pivot->password, $qaSystem->pivot->api_server_url);
         $externalMetrics = $qaSystem->externalMetrics;
         $externalMetricValues = $wrapper->getExternalMetrics($qaSystem->pivot->app_code, $externalMetrics);
-        $externalMetricsNormalized = $this->assignExternalMetricValues($externalMetrics, $externalMetricValues);
-
-        return $externalMetricsNormalized;
+        return $this->assignExternalMetricValues($externalMetrics, $externalMetricValues);
     }
 
     public function assignExternalMetricValues($externalMetrics, $externalMetricValues)

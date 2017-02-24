@@ -2,11 +2,11 @@
 
 namespace Agilin\Utils\Transformers;
 
-class UserTransformer extends Transformer
-{
+class UserTransformer extends Transformer {
+
     public function transform($user)
     {
-    	return [
+        return [
             'id' => $user['id'],
             'email' => $user['email'],
             'name' => $user['name'],

@@ -17,16 +17,15 @@ class AccountIndicatorSeriesController extends ApiController {
     public function __construct(IndicatorSeriesTransformer $indicatorSeriesTransformer)
     {
         $this->indicatorSeriesTransformer = $indicatorSeriesTransformer;
-        //$this->middleware('jwt.auth');
-
+        $this->middleware('jwt.auth');
     }
 
     public function index($accountId, $indicatorId)
     {
         $account = Account::find($accountId);
-        $result = $account->indicators()->wherePivot('account_indicator_id',$indicatorId)
-                                       ->orderBy('pivot_registered_date', 'asc')
-                                       ->get();
+        $result = $account->indicators()->wherePivot('account_indicator_id', $indicatorId)
+            ->orderBy('pivot_registered_date', 'asc')
+            ->get();
 
         return $this->respond([
             'data' => $this->indicatorSeriesTransformer->transformCollection($result->all())

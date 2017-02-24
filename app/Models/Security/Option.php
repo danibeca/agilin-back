@@ -4,9 +4,9 @@ namespace Agilin\Models\Security;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Option extends Model
-{
-     /**
+class Option extends Model {
+
+    /**
      * The database table used by the model.
      *
      * @var string

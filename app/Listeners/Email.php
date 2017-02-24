@@ -36,7 +36,7 @@ class Email implements ShouldQueue
 
         \Mail::send('emails.verify',$data, function($message) use ($event) {
             $message->to($event->user->email, $event->user->name)
-                ->subject( \Lang::get('auth.verify_subject') );;
+                ->subject( \Lang::get('auth.verify_subject') );
         });
 
     }

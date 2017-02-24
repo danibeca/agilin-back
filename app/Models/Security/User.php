@@ -58,7 +58,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function can($ability, $arguments = [])
     {
-        // TODO: Implement can() method.
+
     }
 
 
