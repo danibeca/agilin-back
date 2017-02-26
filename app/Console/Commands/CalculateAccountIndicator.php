@@ -29,6 +29,7 @@ class CalculateAccountIndicator extends Command {
      */
     public function handle()
     {
+        session(['cronRun' => true]);
         foreach (Account::all() as $account)
         {
             foreach (AccountIndicator::all() as $indicator)

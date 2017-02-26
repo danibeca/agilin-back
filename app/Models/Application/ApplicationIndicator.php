@@ -21,7 +21,7 @@ class ApplicationIndicator extends Model {
     {
         $date = Carbon::now()->format('Y-m-d');
         $result = 0;
-        if ($this->hasRecordOnDate($application, $date))
+        if ($this->hasRecordOnDate($application, $date) && !session('cronRun', false))
         {
             $result = $this->calculateFromDB($application, $date);
         } else
