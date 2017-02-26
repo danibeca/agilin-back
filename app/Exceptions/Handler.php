@@ -38,9 +38,13 @@ class Handler extends ExceptionHandler {
             return $this->respondNotFound('Resource not found');
         }
 
-        if ($e instanceof TokenExpiredException  || $e instanceof UnauthorizedHttpException)
+        if ($e instanceof TokenExpiredException )
         {
             return $this->setStatusCode(IlluResponse::HTTP_UNAUTHORIZED)->respondWithError("Token has expired");
+        }
+        if ($e instanceof UnauthorizedHttpException)
+        {
+            return $this->setStatusCode(IlluResponse::HTTP_UNAUTHORIZED)->respondWithError($e->getMessage());
         }
 
         if ($e instanceof TokenInvalidException || $e instanceof BadRequestHttpException)

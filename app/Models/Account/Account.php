@@ -1,6 +1,6 @@
 <?php
 
-namespace Agilin\Models\Accounts;
+namespace Agilin\Models\Account;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +16,6 @@ class Account extends Model {
 
     public function indicators()
     {
-        return $this->belongsToMany('Agilin\Models\Accounts\AccountIndicator', 'account_has_indicator')->withPivot('value','registered_date');
+        return $this->belongsToMany('Agilin\Models\Account\AccountIndicator', 'account_has_indicator')->withPivot('value', 'registered_date');
     }
 }

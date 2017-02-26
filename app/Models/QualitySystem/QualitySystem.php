@@ -1,6 +1,6 @@
 <?php
 
-namespace Agilin\Models\QualitySystems;
+namespace Agilin\Models\QualitySystem;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +11,6 @@ class QualitySystem extends Model {
 
     public function externalMetrics()
     {
-        return $this->hasMany('Agilin\Models\QualitySystems\Metrics\ExternalMetric')->orderBy('level');
+        return $this->hasMany('Agilin\Models\QualitySystem\Metric\ExternalMetric')->orderBy('level');
     }
 }

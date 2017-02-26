@@ -1,6 +1,6 @@
 <?php
 
-namespace Agilin\Models\QualitySystems\Metrics;
+namespace Agilin\Models\QualitySystem\Metric;
 
 use Illuminate\Database\Eloquent\Model;
 use JWadhams\JsonLogic;
@@ -23,7 +23,7 @@ class ExternalMetric extends Model {
 
     public function metric()
     {
-        return $this->belongsTo('Agilin\Models\QualitySystems\Metrics\Metric');
+        return $this->belongsTo('Agilin\Models\QualitySystem\Metric\Metric');
     }
 
     public function normalize($extenalMetrics)

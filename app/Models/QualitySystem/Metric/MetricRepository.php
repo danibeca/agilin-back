@@ -1,10 +1,13 @@
 <?php
 
 
-namespace Agilin\Models\QualitySystems\Metrics;
+namespace Agilin\Models\QualitySystem\Metric;
 
 
-use Agilin\Models\System\Application;
+
+
+use Agilin\Models\Application\Application;
+use Illuminate\Support\Facades\Log;
 
 class MetricRepository {
 
@@ -14,9 +17,13 @@ class MetricRepository {
         $repo = $this->getRepo();
         if (isset($repo[$metric->id . '@' . $application->id]))
         {
+            Log::info($metric->id . '@' . $application->id);
             $result = $repo[$metric->id . '@' . $application->id];
         } else
         {
+            Log::info('ServerMETRIC'.$metric->id);
+            Log::info('ServerAPP'.$application->id);
+            Log::info('Server'.$metric->id . '--' . $application->id);
             $result = $this->getMetricValueFromServer($application, $metric);
         }
         return $result;
@@ -24,12 +31,14 @@ class MetricRepository {
 
     public function getMetricValueFromServer(Application $application, Metric $metric)
     {
+
         $repo = $this->getRepoUpdated($application);
         return $repo[$metric->id . '@' . $application->id];
     }
 
     public function getRepoUpdated(Application $application)
     {
+
         return $this->updateRepo($this->getAllMetricFromServer($application), $application);
     }
 

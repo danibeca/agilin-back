@@ -11,6 +11,11 @@ class System extends Model {
 
     public function applications()
     {
-        return $this->hasMany('Agilin\Models\System\Application')->with('qualitySystem');
+        return $this->hasMany('Agilin\Models\Application\Application')->with('qualitySystem');
+    }
+
+    public function indicators()
+    {
+        return $this->belongsToMany('Agilin\Models\System\SystemIndicator', 'system_has_indicator')->withPivot('value','registered_date');
     }
 }

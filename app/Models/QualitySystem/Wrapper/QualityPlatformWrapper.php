@@ -1,6 +1,6 @@
 <?php
 
-namespace Agilin\Models\QualitySystems\Wrappers;
+namespace Agilin\Models\QualitySystem\Wrapper;
 
 
 abstract class QualityPlatformWrapper {

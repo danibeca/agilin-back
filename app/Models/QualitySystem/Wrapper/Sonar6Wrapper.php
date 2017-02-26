@@ -1,6 +1,6 @@
 <?php
 
-namespace Agilin\Models\QualitySystems\Wrappers;
+namespace Agilin\Models\QualitySystem\Wrapper;
 
 use Buzz\Client\Curl;
 use Buzz\Message\Request;

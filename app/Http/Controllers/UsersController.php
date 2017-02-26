@@ -2,7 +2,10 @@
 
 namespace Agilin\Http\Controllers;
 
+use Agilin\Models\Accounts\Account;
 use Agilin\Models\Accounts\AccountIndicator;
+use Agilin\Models\System\System;
+use Agilin\Models\System\SystemIndicator;
 use Illuminate\Http\Request;
 use Agilin\Models\Security\User;
 use Agilin\Utils\Transformers\UserTransformer;
@@ -23,7 +26,7 @@ class UsersController extends ApiController {
     {
 
         $user = User::with('account')->find(1);
-        return $this->respond(['data' => [0 => ['id' => AccountIndicator::find(1)->calculate($user->account)]]]);
+        return $this->respond(['data' => [0 => ['id' => AccountIndicator::find(1)->calculate(Account::find(1))]]]);
     }
 
 }

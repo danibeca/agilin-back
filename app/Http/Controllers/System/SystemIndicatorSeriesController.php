@@ -1,16 +1,14 @@
 <?php
 
-namespace Agilin\Http\Controllers\Account;
+namespace Agilin\Http\Controllers\System;
 
 
 use Agilin\Http\Controllers\ApiController;
-use Agilin\Models\Account\Account;
-use Agilin\Models\Account\AccountIndicator;
+use Agilin\Models\System\System;
 use Agilin\Utils\Transformers\IndicatorSeriesTransformer;
-use Agilin\Utils\Transformers\IndicatorTransformer;
 
 
-class AccountIndicatorSeriesController extends ApiController {
+class SystemIndicatorSeriesController extends ApiController {
 
     protected $indicatorSeriesTransformer;
 
@@ -20,10 +18,10 @@ class AccountIndicatorSeriesController extends ApiController {
         $this->middleware('jwt.auth');
     }
 
-    public function index($accountId, $indicatorId)
+    public function index($systemId, $indicatorId)
     {
-        $account = Account::find($accountId);
-        $result = $account->indicators()->wherePivot('account_indicator_id', $indicatorId)
+        $system = System::find($systemId);
+        $result = $system->indicators()->wherePivot('system_indicator_id', $indicatorId)
             ->orderBy('pivot_registered_date', 'asc')
             ->get();
 

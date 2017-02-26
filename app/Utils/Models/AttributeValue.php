@@ -1,14 +1,9 @@
 <?php
 
-namespace Agilin\Models\QualitySystems\Metrics;
+namespace Agilin\Utils\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Metric extends Model {
-
-    protected $table = 'metric';
-    protected $appends = ['value'];
-    public $timestamps = false;
+trait AttributeValue {
 
     public function getValueAttribute()
     {

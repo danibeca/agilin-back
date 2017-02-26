@@ -3,7 +3,7 @@
 namespace Agilin\Http\Controllers\Account;
 
 use Agilin\Http\Controllers\ApiController;
-use Agilin\Models\Accounts\Account;
+use Agilin\Models\Account\Account;
 
 class AccountController extends ApiController {
 

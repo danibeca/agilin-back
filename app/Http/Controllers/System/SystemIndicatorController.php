@@ -1,15 +1,17 @@
 <?php
 
-namespace Agilin\Http\Controllers\Account;
+namespace Agilin\Http\Controllers\System;
 
 
 use Agilin\Http\Controllers\ApiController;
 use Agilin\Models\Account\Account;
 use Agilin\Models\Account\AccountIndicator;
+use Agilin\Models\System\System;
+use Agilin\Models\System\SystemIndicator;
 use Agilin\Utils\Transformers\IndicatorTransformer;
 
 
-class AccountIndicatorController extends ApiController {
+class SystemIndicatorController extends ApiController {
 
     protected $indicatorTransformer;
 
@@ -19,11 +21,11 @@ class AccountIndicatorController extends ApiController {
         $this->middleware('jwt.auth');
     }
 
-    public function show($accountId, $id)
+    public function show($systemId, $id)
     {
-        $account = Account::find($accountId);
-        $indicator = AccountIndicator::find($id);
-        $indicator->calculate($account);
+        $system = System::find($systemId);
+        $indicator = SystemIndicator::find($id);
+        $indicator->calculate($system);
 
         return $this->respond([
             'data' => $this->indicatorTransformer->transform($indicator)

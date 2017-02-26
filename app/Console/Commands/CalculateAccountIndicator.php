@@ -2,10 +2,9 @@
 
 namespace Agilin\Console\Commands;
 
-use Agilin\Models\Accounts\Account;
-use Agilin\Models\Accounts\AccountIndicator;
+use Agilin\Models\Account\Account;
+use Agilin\Models\Account\AccountIndicator;
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Inspiring;
 
 class CalculateAccountIndicator extends Command {
 

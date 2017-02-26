@@ -29,6 +29,7 @@ class TokenAuthController extends ApiController {
 
         $user = Auth::guard('api')->user();
         $data = array_merge($this->userTransformer->transform($user), ['token' => $token]);
+        session(['user' => $user]);
 
         return $this->respond($data);
     }

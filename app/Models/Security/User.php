@@ -46,7 +46,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function account()
     {
-        return $this->belongsTo('Agilin\Models\Accounts\Account');
+        return $this->belongsTo('Agilin\Models\Account\Account');
     }
 
     /**
