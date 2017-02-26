@@ -4,8 +4,6 @@
 namespace Agilin\Models\QualitySystem\Metric;
 
 
-
-
 use Agilin\Models\Application\Application;
 use Illuminate\Support\Facades\Log;
 
@@ -17,13 +15,9 @@ class MetricRepository {
         $repo = $this->getRepo();
         if (isset($repo[$metric->id . '@' . $application->id]))
         {
-            Log::info($metric->id . '@' . $application->id);
             $result = $repo[$metric->id . '@' . $application->id];
         } else
         {
-            Log::info('ServerMETRIC'.$metric->id);
-            Log::info('ServerAPP'.$application->id);
-            Log::info('Server'.$metric->id . '--' . $application->id);
             $result = $this->getMetricValueFromServer($application, $metric);
         }
         return $result;
