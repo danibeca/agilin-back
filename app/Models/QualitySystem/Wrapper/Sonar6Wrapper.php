@@ -3,8 +3,10 @@
 namespace Agilin\Models\QualitySystem\Wrapper;
 
 use Buzz\Client\Curl;
+use Buzz\Exception\RequestException;
 use Buzz\Message\Request;
 use Buzz\Message\Response;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class Sonar6Wrapper extends QualityPlatformWrapper {
 
@@ -17,9 +19,14 @@ class Sonar6Wrapper extends QualityPlatformWrapper {
 
         $client = new Curl();
         $client->setVerifyPeer(false);
-        $client->send($request, $response);
 
-        return $this->transformCollection(json_decode($response->getContent(), true)[0]['msr']);
+        $client->send($request, $response);
+        $result = $response->getContent();
+        if(str_contains($result, 'error')){
+            $e = new ServiceUnavailableHttpException('Connection refused');
+            throw $e;
+        }
+        return $this->transformCollection(json_decode($result, true)[0]['msr']);
 
     }
 

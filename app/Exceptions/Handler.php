@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Agilin\Utils\Helpers\ResponseHelper;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -64,6 +65,11 @@ class Handler extends ExceptionHandler {
         if ($e instanceof NotFoundHttpException)
         {
             return $this->respondNotFound();
+        }
+
+        if ($e instanceof ServiceUnavailableHttpException)
+        {
+            return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError("Service unavailable");
         }
 
         return parent::render($request, $e);
