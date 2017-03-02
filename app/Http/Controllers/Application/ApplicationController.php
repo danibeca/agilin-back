@@ -23,11 +23,13 @@ class ApplicationController extends ApiController {
 
     public function index()
     {
-        $accountId = 3;
-        $groups = Account::whereId($accountId)->with('systems')->get()->pluck('systems')[0]->pluck('applications')->all();
+
+        $applicationGroups = Account::whereId($user = Auth::guard('api')
+            ->user()->account_id)->with('systems')->get()
+            ->pluck('systems')[0]->pluck('applications')->all();
         $apps = collect([]);
         $count = 0;
-        foreach ($groups as $group)
+        foreach ($applicationGroups as $group)
         {
             $count++;
             if ($group->count() > 1)

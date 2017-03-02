@@ -3,18 +3,27 @@
 namespace Agilin\Models\QualitySystem\Wrapper;
 
 use Buzz\Client\Curl;
-use Buzz\Exception\RequestException;
 use Buzz\Message\Request;
 use Buzz\Message\Response;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
-class Sonar6Wrapper extends QualityPlatformWrapper {
+abstract class SonarWrapper extends QualityPlatformWrapper {
+
+    public function __construct($username, $password, $serverAPI)
+    {
+        parent::__construct($username, $password, $serverAPI);
+    }
+
+    public abstract function getMetricsUrl($projectId, $stringMetrics);
+    public abstract function readResponse($response);
+    public abstract function transformMetric($metric);
 
     private function getExternalMetricsWithMetricString($projectId, $stringMetrics)
     {
-        $url = $this->serverAPI . '/resources?resource=' . $projectId . '&metrics=' . $stringMetrics;
+        $url = $this->getMetricsUrl($projectId, $stringMetrics);
 
-        $request = new Request('GET', '/', $url);
+        $request = new Request('GET', $url['resource'], $url['base']);
         $response = new Response();
 
         $client = new Curl();
@@ -26,22 +35,17 @@ class Sonar6Wrapper extends QualityPlatformWrapper {
             $e = new ServiceUnavailableHttpException(null,$result);
             throw $e;
         }
-        return $this->transformCollection(json_decode($result, true)[0]['msr']);
+        return $this->transformCollection($this->readResponse($result));
 
     }
 
     public function getExternalMetrics($projectId, $metricCodes)
     {
-        $stringMetrics = $metricCodes->implode('code', ',') . ',';
+        $stringMetrics = $metricCodes->implode('code', ',');
         return $this->getExternalMetricsWithMetricString($projectId, $stringMetrics);
     }
 
-    public function transformMetric($metric)
-    {
-        return [
-            $metric['key'] => $metric['val']
-        ];
-    }
+
 
     public function transformCollection(array $metrics)
     {
