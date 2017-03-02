@@ -72,6 +72,13 @@ class Handler extends ExceptionHandler {
             return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError("Service unavailable");
         }
 
+        if ($e instanceof RequestExceptio)
+        {
+            return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError("Service unavailable");
+        }
+
+
+
         return parent::render($request, $e);
     }
 

@@ -23,7 +23,7 @@ class Sonar6Wrapper extends QualityPlatformWrapper {
         $client->send($request, $response);
         $result = $response->getContent();
         if(str_contains($result, 'error')){
-            $e = new ServiceUnavailableHttpException('Connection refused');
+            $e = new ServiceUnavailableHttpException(null,$result);
             throw $e;
         }
         return $this->transformCollection(json_decode($result, true)[0]['msr']);

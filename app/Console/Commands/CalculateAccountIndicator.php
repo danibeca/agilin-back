@@ -5,6 +5,7 @@ namespace Agilin\Console\Commands;
 use Agilin\Models\Account\Account;
 use Agilin\Models\Account\AccountIndicator;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CalculateAccountIndicator extends Command {
 
@@ -34,7 +35,12 @@ class CalculateAccountIndicator extends Command {
         {
             foreach (AccountIndicator::all() as $indicator)
             {
-                $indicator->calculate($account);
+                try{
+                    $indicator->calculate($account);
+                }
+                catch (\Exception $e){
+                    Log::info('Cron Job:: Account Indicator, Account::'.$account->name.', Exception message:: '.$e->getMessage());
+                }
             }
         }
     }
