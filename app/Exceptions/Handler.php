@@ -2,6 +2,7 @@
 
 namespace Agilin\Exceptions;
 
+use Buzz\Exception\RequestException;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -39,18 +40,23 @@ class Handler extends ExceptionHandler {
             return $this->respondNotFound('Resource not found');
         }
 
-        if ($e instanceof TokenExpiredException )
+        if ($e instanceof TokenExpiredException)
         {
-            return $this->setStatusCode(IlluResponse::HTTP_UNAUTHORIZED)->respondWithError("Token has expired");
+            return $this->setStatusCode(IlluResponse::HTTP_UNAUTHORIZED)->respondWithError($e->getMessage());
         }
         if ($e instanceof UnauthorizedHttpException)
         {
             return $this->setStatusCode(IlluResponse::HTTP_UNAUTHORIZED)->respondWithError($e->getMessage());
         }
 
-        if ($e instanceof TokenInvalidException || $e instanceof BadRequestHttpException)
+        if ($e instanceof TokenInvalidException)
         {
-            return $this->setStatusCode(IlluResponse::HTTP_BAD_REQUEST)->respondWithError("Token has not been provided");
+            return $this->setStatusCode(IlluResponse::HTTP_BAD_REQUEST)->respondWithError($e->getMessage());
+        }
+
+        if ($e instanceof BadRequestHttpException)
+        {
+            return $this->setStatusCode(IlluResponse::HTTP_BAD_REQUEST)->respondWithError($e->getMessage());
         }
         if ($e instanceof JWTException)
         {
@@ -69,14 +75,17 @@ class Handler extends ExceptionHandler {
 
         if ($e instanceof ServiceUnavailableHttpException)
         {
-            return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError("Service unavailable");
+            return $this->setStatusCode(IlluResponse::HTTP_REQUEST_TIMEOUT)->respondWithError("Service unavailable");
         }
 
-        if ($e instanceof RequestExceptio)
+        if ($e instanceof RequestException)
         {
-            return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError("Service unavailable");
+            if (str_contains($e->getMessage(), 'timeout'))
+            {
+                return $this->setStatusCode(IlluResponse::HTTP_REQUEST_TIMEOUT)->respondWithError("Request timeout");
+            }
+            return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError($e->getMessage());
         }
-
 
 
         return parent::render($request, $e);
@@ -85,8 +94,8 @@ class Handler extends ExceptionHandler {
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Auth\AuthenticationException $exception
      * @return \Illuminate\Http\Response
      */
     protected function unauthenticated($request, AuthenticationException $exception)
