@@ -28,4 +28,5 @@ Route::group(['middleware' => ['cors', 'web']], function ()
     Route::post('login', 'Auth\TokenAuthController@authenticate');
     Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+    Route::get('token/valid', 'Auth\TokenAuthController@validateToken');
 });
