@@ -11,11 +11,24 @@
 |
 */
 
-$factory->define(Agilin\User::class, function ($faker) {
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Model\User2::class, function (Faker\Generator $faker)
+{
+    static $password;
+
     return [
         'name' => $faker->name,
-        'email' => $faker->email,
-        'password' => str_random(10),
+        'email' => $faker->unique()->safeEmail,
+        'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+    ];
+});
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Models\QualitySystem\Metric\ExternalMetric::class, function ($faker)
+{
+    return [
+        'id' => $faker->randomDigit,
+        'code' => $faker->randomNumber
     ];
 });

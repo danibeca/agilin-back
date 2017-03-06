@@ -1,8 +1,10 @@
 {
-  "name": "agilin-back",
+  "name": "quind-back",
   "private": true,
   "devDependencies": {
-    "gulp": "^3.8.8"
+    "gulp": "^3.8.8",
+    "gulp-notify": "^3.0.0",
+    "gulp-phpunit": "^0.22.2"
   },
   "dependencies": {
     "laravel-elixir": "^2.0.0",

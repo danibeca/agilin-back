@@ -6,7 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*",
+        "laravel/framework": "5.4.*",
 
         "barryvdh/laravel-cors": "0.8.*",
         "jwadhams/json-logic-php": ">=1.0.0",
@@ -14,10 +14,10 @@
     },
     "require-dev": {
         "tymon/jwt-auth": "1.0.0-beta.2",
-        "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.0",
-        "phpspec/phpspec": "3.1.*",
+        "fzaninotto/faker": "1.6.*",
+        "mockery/mockery": "dev-master",
+        "phpunit/phpunit": "5.7.*",
+        "phpspec/phpspec": "3.2.*",
         "symfony/css-selector": "3.1.*",
         "symfony/dom-crawler": "3.1.*",
         "kriswallsmith/buzz": ">=0.15"
@@ -31,9 +31,9 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "tests/TestCase.php"
-        ]
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "scripts": {
         "post-root-package-install": [
@@ -52,6 +52,7 @@
         ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "sort-packages": true
     }
 }

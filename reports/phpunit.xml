@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="7" assertions="10" failures="0" errors="1" time="1.236070">
+    <testsuite name="Feature Tests" tests="3" assertions="5" failures="0" errors="0" time="1.226070">
+      <testsuite name="Tests\Unit\Security\LoginTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Feature\Security\LoginTest.php" tests="3" assertions="5" failures="0" errors="0" time="1.226070">
+        <testcase name="it_calls_authentication_without_credentials" class="Tests\Unit\Security\LoginTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Feature\Security\LoginTest.php" line="12" assertions="2" time="0.717041"/>
+        <testcase name="it_calls_authentication_with_valid_credentials" class="Tests\Unit\Security\LoginTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Feature\Security\LoginTest.php" line="22" assertions="2" time="0.307018"/>
+        <testcase name="it_calls_authentication_with_invalid_credentials" class="Tests\Unit\Security\LoginTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Feature\Security\LoginTest.php" line="32" assertions="1" time="0.202011"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="Unit Tests" tests="4" assertions="5" failures="0" errors="1" time="0.010000">
+      <testsuite name="Tests\Unit\QualitySystem\Sonar62WrapperTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Unit\QualitySystem\Sonar62WrapperTest.php" tests="4" assertions="5" failures="0" errors="1" time="0.010000">
+        <testcase name="it_gets_the_right_resquest" class="Tests\Unit\QualitySystem\Sonar62WrapperTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Unit\QualitySystem\Sonar62WrapperTest.php" line="18" assertions="2" time="0.001000"/>
+        <testcase name="it_reads_services_response" class="Tests\Unit\QualitySystem\Sonar62WrapperTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Unit\QualitySystem\Sonar62WrapperTest.php" line="29" assertions="2" time="0.002000"/>
+        <testcase name="it_transforms_metric" class="Tests\Unit\QualitySystem\Sonar62WrapperTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Unit\QualitySystem\Sonar62WrapperTest.php" line="38" assertions="1" time="0.001000"/>
+        <testcase name="it_gets_metrics" class="Tests\Unit\QualitySystem\Sonar62WrapperTest" file="C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Unit\QualitySystem\Sonar62WrapperTest.php" line="45" assertions="0" time="0.006000">
+          <error type="InvalidArgumentException">Tests\Unit\QualitySystem\Sonar62WrapperTest::it_gets_metrics&#13;
+InvalidArgumentException: Unable to locate factory with name [default] [Agilin\Models\Security\User].
+&#13;
+C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\vendor\laravel\framework\src\Illuminate\Database\Eloquent\FactoryBuilder.php:196
+C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\vendor\laravel\framework\src\Illuminate\Database\Eloquent\Concerns\GuardsAttributes.php:122
+C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\vendor\laravel\framework\src\Illuminate\Database\Eloquent\FactoryBuilder.php:202
+C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\vendor\laravel\framework\src\Illuminate\Database\Eloquent\FactoryBuilder.php:133
+C:\DANIEL\Developing\SERVER\wamp3\www\laravel\agilin\tests\Unit\QualitySystem\Sonar62WrapperTest.php:53
+</error>
+        </testcase>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

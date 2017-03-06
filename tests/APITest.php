@@ -1,7 +1,7 @@
 <?php
 
-
-class ApiTester extends TestCase
+namespace Tests;
+abstract class APITest extends TestCase
 {
     public function requestJson($method, $url, $params = [])
     {
