@@ -5,18 +5,30 @@ namespace Agilin\Models\QualitySystem\Wrapper;
 use Buzz\Client\Curl;
 use Buzz\Message\Request;
 use Buzz\Message\Response;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+
 
 abstract class SonarWrapper extends QualityPlatformWrapper {
 
-    public function __construct($username, $password, $serverAPI)
+    protected $client;
+    protected $response;
+
+    public function __construct($username, $password, $serverAPI, $client = null, $response = null)
     {
         parent::__construct($username, $password, $serverAPI);
+        if($client){
+            $this->client = $client;
+            $this->response = $response;
+        }else{
+            $this->client = new Curl();
+            $this->response = new Response();
+        }
     }
 
     public abstract function getMetricsUrl($projectId, $stringMetrics);
+
     public abstract function readResponse($response);
+
     public abstract function transformMetric($metric);
 
     private function getExternalMetricsWithMetricString($projectId, $stringMetrics)
@@ -24,15 +36,14 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
         $url = $this->getMetricsUrl($projectId, $stringMetrics);
 
         $request = new Request('GET', $url['resource'], $url['base']);
-        $response = new Response();
 
-        $client = new Curl();
-        $client->setVerifyPeer(false);
+        $this->client->setVerifyPeer(false);
 
-        $client->send($request, $response);
-        $result = $response->getContent();
-        if(str_contains($result, 'error')){
-            $e = new ServiceUnavailableHttpException(null,$result);
+        $this->client->send($request, $this->response);
+        $result = $this->response->getContent();
+        if (str_contains($result, 'error'))
+        {
+            $e = new ServiceUnavailableHttpException(null, $result);
             throw $e;
         }
         return $this->transformCollection($this->readResponse($result));
@@ -44,7 +55,6 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
         $stringMetrics = $metricCodes->implode('code', ',');
         return $this->getExternalMetricsWithMetricString($projectId, $stringMetrics);
     }
-
 
 
     public function transformCollection(array $metrics)

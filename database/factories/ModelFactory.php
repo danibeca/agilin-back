@@ -12,7 +12,7 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(\Agilin\Model\User2::class, function (Faker\Generator $faker)
+$factory->define(\Agilin\Models\Security\User::class, function (Faker\Generator $faker)
 {
     static $password;
 
