@@ -37,4 +37,61 @@ class MockSonarResponse {
               }
             ]';
     }
+
+    public static function getResponse63()
+    {
+        return '{
+                  "component": {
+                    "id": "AVqdWLymZpzp6YfOfgrS",
+                    "key": "quind-back",
+                    "name": "quind-back",
+                    "description": "No description.",
+                    "qualifier": "TRK",
+                    "measures": [
+                      {
+                        "metric": "sqale_index",
+                        "value": "144",
+                        "periods": [
+                          {
+                            "index": 1,
+                            "value": "-2"
+                          }
+                        ]
+                      },
+                      {
+                        "metric": "ncloc",
+                        "value": "1248",
+                        "periods": [
+                          {
+                            "index": 1,
+                            "value": "7"
+                          }
+                        ]
+                      },
+                      {
+                        "metric": "duplicated_lines_density",
+                        "value": "0.0",
+                        "periods": [
+                          {
+                            "index": 1,
+                            "value": "0.0"
+                          }
+                        ]
+                      },
+                      {
+                        "metric": "function_complexity",
+                        "value": "1.5",
+                        "periods": [
+                          {
+                            "index": 1,
+                            "value": "0.0"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }';
+    }
+
+
 }

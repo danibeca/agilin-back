@@ -16,10 +16,12 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
     public function __construct($username, $password, $serverAPI, $client = null, $response = null)
     {
         parent::__construct($username, $password, $serverAPI);
-        if($client){
+        if ($client != null)
+        {
             $this->client = $client;
             $this->response = $response;
-        }else{
+        } else
+        {
             $this->client = new Curl();
             $this->response = new Response();
         }

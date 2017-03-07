@@ -13,20 +13,26 @@ class ApplicationIndicator extends Model {
 
     protected $table = 'application_indicator';
     protected $appends = ['value'];
+    protected $metricRepository;
     public $timestamps = false;
 
     use AttributeValue;
+
+    public function applications()
+    {
+        return $this->belongsToMany('Agilin\Models\Application\Application', 'application_has_indicator')->withPivot('value', 'registered_date');
+    }
 
     public function calculate(Application $application)
     {
         $date = Carbon::now()->format('Y-m-d');
         $result = 0;
-        if ($this->hasRecordOnDate($application, $date) && !session('cronRun', false))
+        if ($this->hasRecordOnDate($application, $date) && ! session('cronRun', false))
         {
             $result = $this->calculateFromDB($application, $date);
         } else
         {
-           $result = $this->calculateFromRepository($application);
+            $result = $this->calculateFromRepository($application);
         }
         $this->value = $result;
         return $result;
@@ -44,18 +50,23 @@ class ApplicationIndicator extends Model {
     public function calculateFromRepository(Application $application)
     {
         $data = $this->calculation_data;
-        $metricRepository = new MetricRepository();
+
+        if ($this->metricRepository == null)
+        {
+            $this->metricRepository = new MetricRepository();
+        }
+
         foreach (json_decode($data) as $key => $attribute)
         {
             if (substr($key, 0, 5) === "@ind_")
             {
-                $subIndicator = ApplicationIndicator::where('code', substr($key, 5, strlen($key)))->first();
+                $subIndicator = $this->getDependencyByKey($key);
                 $data = str_replace($key . ".value", $subIndicator->calculate($application), $data);
             }
             if (substr($key, 0, 5) === "@met_")
             {
                 $metric = Metric::where('code', substr($key, 5, strlen($key)))->first();
-                $data = str_replace($key . ".value", $metricRepository->getMetricValue($application, $metric), $data);
+                $data = str_replace($key . ".value", $this->metricRepository->getMetricValue($application, $metric), $data);
             }
         }
         $value = JsonLogic::apply(json_decode($this->calculation_rule), json_decode($data));
@@ -75,7 +86,6 @@ class ApplicationIndicator extends Model {
         {
             $this->applications()->save($application, ['value' => $value, 'registered_date' => $date]);
         }
-
     }
 
     public function hasRecordOnDate(Application $application, $date)
@@ -84,8 +94,13 @@ class ApplicationIndicator extends Model {
         return ($pivot->count() > 0);
     }
 
-    public function applications()
+    public function setMetricRepository($metricRepository)
     {
-        return $this->belongsToMany('Agilin\Models\Application\Application', 'application_has_indicator')->withPivot('value', 'registered_date');
+        $this->metricRepository = $metricRepository;
+    }
+
+    public function getDependencyByKey($key)
+    {
+        return ApplicationIndicator::where('code', substr($key, 5, strlen($key)))->first();
     }
 }

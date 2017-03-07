@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Log;
 
 class MetricRepository {
 
+    protected $wrapperServerMetrics;
+
+    public function __construct($wrapperServerMetrics = null)
+    {
+        if ($wrapperServerMetrics != null)
+        {
+            $this->wrapperServerMetrics = $wrapperServerMetrics;
+        }
+    }
+
+
     public function getMetricValue(Application $application, Metric $metric)
     {
         $result = 0;
@@ -32,23 +43,27 @@ class MetricRepository {
 
     public function getRepoUpdated(Application $application)
     {
-
         return $this->updateRepo($this->getAllMetricFromServer($application), $application);
     }
 
-    public function getAllMetricFromServer(Application $application)
+    public function getAllMetricFromServer(Application $application, $appCode = null)
     {
         $qaSystem = $application->qualitySystem->first();
-        $wrapper = new $qaSystem->wrapper_class($qaSystem->pivot->username, $qaSystem->pivot->password, $qaSystem->pivot->api_server_url);
+        if ($this->wrapperServerMetrics == null)
+        {
+            $this->wrapperServerMetrics = new $qaSystem->wrapper_class($qaSystem->pivot->username, $qaSystem->pivot->password, $qaSystem->pivot->api_server_url);
+            $appCode = $qaSystem->pivot->app_code;
+        }
         $externalMetrics = $qaSystem->externalMetrics;
-        $externalMetricValues = $wrapper->getExternalMetrics($qaSystem->pivot->app_code, $externalMetrics);
+        $externalMetricValues = $this->wrapperServerMetrics->getExternalMetrics($appCode, $externalMetrics);
         return $this->assignExternalMetricValues($externalMetrics, $externalMetricValues);
     }
 
     public function assignExternalMetricValues($externalMetrics, $externalMetricValues)
     {
-        foreach ($externalMetrics as $externalMetric)
+        foreach ($externalMetrics->sortBy('level') as $externalMetric)
         {
+
             if (isset($externalMetricValues[$externalMetric->code]))
             {
                 $externalMetric->value = $externalMetricValues[$externalMetric->code];
@@ -58,6 +73,7 @@ class MetricRepository {
             }
             $externalMetric->normalize($externalMetrics);
         }
+
         return $externalMetrics;
     }
 
@@ -73,7 +89,7 @@ class MetricRepository {
         {
             $repo[$externalMetric->metric->id . '@' . $application->id] = $externalMetric->value;
         }
-        session(['metricRepository' => $repo]);
+
         return $repo;
     }
 }

@@ -28,7 +28,49 @@ $factory->define(\Agilin\Models\Security\User::class, function (Faker\Generator 
 $factory->define(\Agilin\Models\QualitySystem\Metric\ExternalMetric::class, function ($faker)
 {
     return [
-        'id' => $faker->randomDigit,
+        'id' => $faker->randomNumber(5),
+        'code' => $faker->randomNumber,
+        'normalization_rule' => '{ "var" : ["@this"] }',
+        'normalization_data' => '{ "@this" : "@this.value" }',
+        'value' => $faker->randomFloat
+    ];
+});
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Models\QualitySystem\Metric\Metric::class, function ($faker)
+{
+    return [
+        'id' => $faker->randomNumber(5),
+        'code' => $faker->randomNumber,
+        'value' => $faker->randomFloat
+    ];
+});
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Models\Application\Application::class, function ($faker)
+{
+    return [
+        'id' => $faker->randomNumber(5),
+        'name' => $faker->titleFemale,
+    ];
+});
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Models\QualitySystem\QualitySystem::class, function ($faker)
+{
+    return [
+        'id' => $faker->randomNumber(5),
+        'name' => $faker->titleFemale
+
+    ];
+});
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Models\Application\ApplicationIndicator::class, function ($faker)
+{
+    return [
+        'id' => $faker->randomNumber(5),
         'code' => $faker->randomNumber
     ];
+
 });

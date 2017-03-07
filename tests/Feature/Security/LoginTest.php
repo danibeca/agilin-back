@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Tests\APITest;
 
 
-class LoginTest extends APITest   {
+class LoginTest extends APITest {
 
     /** @test */
     public function it_calls_authentication_without_credentials()

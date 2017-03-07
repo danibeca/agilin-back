@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Unit\QualitySystem;
+namespace Tests\Unit\QualitySystem\Wrapper;
 
 use Buzz\Client\Curl;
 use Buzz\Message\Response;
