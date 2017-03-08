@@ -45,8 +45,7 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
         $result = $this->response->getContent();
         if (str_contains($result, 'error'))
         {
-            $e = new ServiceUnavailableHttpException(null, $result);
-            throw $e;
+            throw new ServiceUnavailableHttpException(null, $result);
         }
         return $this->transformCollection($this->readResponse($result));
 

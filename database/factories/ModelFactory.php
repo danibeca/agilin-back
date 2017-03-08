@@ -51,7 +51,16 @@ $factory->define(\Agilin\Models\Application\Application::class, function ($faker
 {
     return [
         'id' => $faker->randomNumber(5),
-        'name' => $faker->titleFemale,
+        'name' => $faker->word,
+    ];
+});
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Models\System\System::class, function ($faker)
+{
+    return [
+        'id' => $faker->randomNumber(5),
+        'name' => $faker->word,
     ];
 });
 
@@ -60,7 +69,7 @@ $factory->define(\Agilin\Models\QualitySystem\QualitySystem::class, function ($f
 {
     return [
         'id' => $faker->randomNumber(5),
-        'name' => $faker->titleFemale
+        'name' => $faker->word
 
     ];
 });
@@ -70,7 +79,8 @@ $factory->define(\Agilin\Models\Application\ApplicationIndicator::class, functio
 {
     return [
         'id' => $faker->randomNumber(5),
-        'code' => $faker->randomNumber
+        'code' => $faker->randomNumber,
+        'name' => $faker->word
     ];
 
 });

@@ -15,7 +15,7 @@ class ApplicationIndicatorSeriesController extends ApiController {
     public function __construct(IndicatorSeriesTransformer $indicatorSeriesTransformer)
     {
         $this->indicatorSeriesTransformer = $indicatorSeriesTransformer;
-        //$this->middleware('jwt.auth');
+        $this->middleware('jwt.auth');
     }
 
     public function index($applicationId, $indicatorId)

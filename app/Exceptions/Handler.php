@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\HttpKernel\Tests\Exception\ServiceUnavailableHttpExceptionTest;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -29,10 +28,6 @@ class Handler extends ExceptionHandler {
         \PhpSpec\Exception\Exception::class
     ];
 
-    public function report(Exception $e)
-    {
-        return parent::report($e);
-    }
 
     public function render($request, Exception $e)
     {
@@ -42,38 +37,16 @@ class Handler extends ExceptionHandler {
             return $this->respondNotFound('Resource not found');
         }
 
-        if ($e instanceof TokenExpiredException)
-        {
-            return $this->setStatusCode(IlluResponse::HTTP_UNAUTHORIZED)->respondWithError($e->getMessage());
-        }
-        if ($e instanceof UnauthorizedHttpException)
-        {
-            return $this->setStatusCode(IlluResponse::HTTP_UNAUTHORIZED)->respondWithError($e->getMessage());
-        }
-
-        if ($e instanceof TokenInvalidException)
-        {
-            return $this->setStatusCode(IlluResponse::HTTP_BAD_REQUEST)->respondWithError($e->getMessage());
-        }
-
-        if ($e instanceof BadRequestHttpException)
-        {
-            return $this->setStatusCode(IlluResponse::HTTP_BAD_REQUEST)->respondWithError($e->getMessage());
-        }
-        if ($e instanceof JWTException)
-        {
-            return $this->respondInternalErorr("Error creating token");
-        }
-
-        if ($e instanceof MethodNotAllowedHttpException)
-        {
-            return $this->respondMethodNotAllowed();
-        }
-
         if ($e instanceof NotFoundHttpException)
         {
             return $this->respondNotFound();
         }
+
+        if ($e instanceof BadRequestHttpException)
+        {
+            return $this->respondBadRequest($e->getMessage());
+        }
+
 
         if ($e instanceof ServiceUnavailableHttpException)
         {
@@ -89,6 +62,34 @@ class Handler extends ExceptionHandler {
             return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError($e->getMessage());
         }
 
+        return $this->renderSecurityExceptions($request, $e);
+    }
+
+    public function renderSecurityExceptions($request, Exception $e)
+    {
+        if ($e instanceof TokenExpiredException)
+        {
+            return $this->respondUnauthenticated($e->getMessage());
+        }
+        if ($e instanceof UnauthorizedHttpException)
+        {
+            return $this->respondUnauthenticated($e->getMessage());
+        }
+
+        if ($e instanceof TokenInvalidException)
+        {
+            return $this->respondBadRequest($e->getMessage());
+        }
+
+        if ($e instanceof JWTException)
+        {
+            return $this->respondInternalErorr("Error creating token");
+        }
+
+        if ($e instanceof MethodNotAllowedHttpException)
+        {
+            return $this->respondMethodNotAllowed();
+        }
         return parent::render($request, $e);
     }
 

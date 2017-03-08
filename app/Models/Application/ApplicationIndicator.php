@@ -13,6 +13,7 @@ class ApplicationIndicator extends Model {
 
     protected $table = 'application_indicator';
     protected $appends = ['value'];
+    protected $appIdField = 'application_id';
     protected $metricRepository;
     public $timestamps = false;
 
@@ -41,7 +42,7 @@ class ApplicationIndicator extends Model {
     public function calculateFromDB(Application $application, $date)
     {
         return $this->applications()
-            ->where('application_id', $application->id)
+            ->where($this->appIdField, $application->id)
             ->wherePivot('registered_date', $date)
             ->get()->first()
             ->pivot->value;
@@ -79,7 +80,7 @@ class ApplicationIndicator extends Model {
         $date = Carbon::now()->format('Y-m-d');
         if ($this->hasRecordOnDate($application, $date))
         {
-            $this->applications()->where('application_id', $application->id)
+            $this->applications()->where($this->appIdField, $application->id)
                 ->wherePivot('registered_date', $date)
                 ->updateExistingPivot($application->id, ['value' => $value, 'registered_date' => $date]);
         } else
@@ -90,7 +91,7 @@ class ApplicationIndicator extends Model {
 
     public function hasRecordOnDate(Application $application, $date)
     {
-        $pivot = $this->applications()->where('application_id', $application->id)->wherePivot('registered_date', $date)->get();
+        $pivot = $this->applications()->where($this->appIdField, $application->id)->wherePivot('registered_date', $date)->get();
         return ($pivot->count() > 0);
     }
 

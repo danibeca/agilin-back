@@ -39,10 +39,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $hidden = ['password', 'remember_token', 'activation_code'];
 
-    public function roles()
-    {
-        return $this->belongsToMany('Agilin\Models\Security\Role', 'co_sec_user_role_list');
-    }
 
     public function account()
     {
