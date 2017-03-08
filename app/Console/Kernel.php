@@ -14,7 +14,6 @@ class Kernel extends ConsoleKernel {
      * @var array
      */
     protected $commands = [
-        \Agilin\Console\Commands\Inspire::class,
         \Agilin\Console\Commands\CalculateAccountIndicator::class
     ];
 
@@ -26,8 +25,6 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('inspire')
-            ->hourly();
         $schedule->command('indicatorscalculate')
             ->hourly();
     }

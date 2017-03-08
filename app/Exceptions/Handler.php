@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Tests\Exception\ServiceUnavailableHttpExceptionTest;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -25,6 +26,7 @@ class Handler extends ExceptionHandler {
 
     protected $dontReport = [
         HttpException::class,
+        \PhpSpec\Exception\Exception::class
     ];
 
     public function report(Exception $e)
@@ -75,7 +77,7 @@ class Handler extends ExceptionHandler {
 
         if ($e instanceof ServiceUnavailableHttpException)
         {
-            return $this->setStatusCode(IlluResponse::HTTP_REQUEST_TIMEOUT)->respondWithError("Service unavailable");
+            return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError("Service unavailable");
         }
 
         if ($e instanceof RequestException)
@@ -86,7 +88,6 @@ class Handler extends ExceptionHandler {
             }
             return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError($e->getMessage());
         }
-
 
         return parent::render($request, $e);
     }

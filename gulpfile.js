@@ -25,7 +25,12 @@ gulp.task('sonar', function (callback) {
         options: {
             'sonar.projectBaseDir': './',
             'sonar.sources': 'app',
-            'sonar.exclusions':'app/Providers/**/*.php, app/Http/Middleware/**/*.php, app/Http/Requests/**/*.php',
+            'sonar.exclusions':'app/Providers/**/*.php,' +
+                               'app/Http/Middleware/**/*.php,' +
+                               'app/Http/Requests/**/*.php,' +
+                               'app/Http/Kernel.php,' +
+                               'app/Console/Kernel.php,' +
+                               'tests/**/*.php',
             'sonar.language': 'php',
             'sonar.tests': 'tests',
             'sonar.php.coverage.reportPath': 'reports/phpunit.coverage.xml',

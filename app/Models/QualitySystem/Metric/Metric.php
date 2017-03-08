@@ -2,6 +2,7 @@
 
 namespace Agilin\Models\QualitySystem\Metric;
 
+use Agilin\Utils\Models\AttributeValue;
 use Illuminate\Database\Eloquent\Model;
 
 class Metric extends Model {
@@ -10,13 +11,5 @@ class Metric extends Model {
     protected $appends = ['value'];
     public $timestamps = false;
 
-    public function getValueAttribute()
-    {
-        $result = null;
-        if (isset($this->attributes['value']))
-        {
-            $result = $this->attributes['value'];
-        }
-        return $result;
-    }
+    use AttributeValue;
 }
