@@ -25,6 +25,16 @@ $factory->define(\Agilin\Models\Security\User::class, function (Faker\Generator 
 });
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Models\QualitySystem\QualitySystem::class, function ($faker)
+{
+    return [
+        'id' => $faker->randomNumber(5),
+        'name' => $faker->word
+
+    ];
+});
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(\Agilin\Models\QualitySystem\Metric\ExternalMetric::class, function ($faker)
 {
     return [
@@ -46,14 +56,6 @@ $factory->define(\Agilin\Models\QualitySystem\Metric\Metric::class, function ($f
     ];
 });
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(\Agilin\Models\Application\Application::class, function ($faker)
-{
-    return [
-        'id' => $faker->randomNumber(5),
-        'name' => $faker->word,
-    ];
-});
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(\Agilin\Models\System\System::class, function ($faker)
@@ -65,14 +67,26 @@ $factory->define(\Agilin\Models\System\System::class, function ($faker)
 });
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(\Agilin\Models\QualitySystem\QualitySystem::class, function ($faker)
+$factory->define(\Agilin\Models\System\SystemIndicator::class, function ($faker)
 {
     return [
         'id' => $faker->randomNumber(5),
+        'code' => $faker->randomNumber,
         'name' => $faker->word
+    ];
 
+});
+
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+$factory->define(\Agilin\Models\Application\Application::class, function ($faker)
+{
+    return [
+        'id' => $faker->randomNumber(5),
+        'name' => $faker->word,
     ];
 });
+
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(\Agilin\Models\Application\ApplicationIndicator::class, function ($faker)

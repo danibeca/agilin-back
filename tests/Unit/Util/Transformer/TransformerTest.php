@@ -29,7 +29,7 @@ class TransformerTest extends APITest {
     /** @test */
     public function it_transform_one_application()
     {
-        $application = MockApplication::getOnlyApplication();
+        $application = MockApplication::getPlainApplication();
         $result = (new ApplicationTransformer())->transform($application);
         $this->assertEquals($application->id, $result['id']);
         $this->assertEquals($application->name, $result['name']);

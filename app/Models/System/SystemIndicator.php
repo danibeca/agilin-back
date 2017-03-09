@@ -6,12 +6,15 @@ use Agilin\Models\Application\ApplicationIndicator;
 use Agilin\Utils\Models\AttributeValue;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JWadhams\JsonLogic;
 
 
 class SystemIndicator extends Model {
 
     protected $table = 'system_indicator';
     protected $appends = ['value'];
+    protected $systemIdField = 'system_id';
+    protected $registeredDateField = 'registered_date';
     public $timestamps = false;
 
     use AttributeValue;
@@ -23,33 +26,87 @@ class SystemIndicator extends Model {
 
     public function calculate(System $system)
     {
-        $qualityCodeIndicator = ApplicationIndicator::find(1);
+        $date = Carbon::now()->format('Y-m-d');
+        $result = 0;
+        if ($this->hasRecordOnDate($system, $date) && ! session('cronRun', false))
+        {
+            $result = $this->calculateFromDB($system, $date);
+        } else
+        {
+            $result = $this->calculateFromApplications($system);
+        }
+        $this->value = $result;
+        return $result;
+    }
+
+    public function calculateFromDB(System $system, $date)
+    {
+        return $this->systems()
+            ->where($this->systemIdField, $system->id)
+            ->wherePivot($this->registeredDateField, $date)
+            ->get()->first()
+            ->pivot->value;
+    }
+
+    public function calculateFromApplications(System $system)
+    {
+        $data = $this->calculation_data;
+
+        foreach (json_decode($data) as $key => $attribute)
+        {
+            if (substr($key, 0, 9) === "@appsInd_")
+            {
+                $applicationIndicator = $this->getDependencyByKey($key);
+                $data = str_replace($key . ".value", $this->summarizeApplicationIndicator($system, $applicationIndicator), $data);
+            }
+        }
+        $value = JsonLogic::apply(json_decode($this->calculation_rule), json_decode($data));
+        $this->saveIndicator($system, $value);
+        return $value;
+    }
+
+    public function summarizeApplicationIndicator(System $system, ApplicationIndicator $applicationIndicator)
+    {
         $result = 0;
         $counter = 0;
         foreach ($system->applications as $application)
         {
             $counter++;
-            $result += $qualityCodeIndicator->calculate($application);
+            $result += $applicationIndicator->calculate($application);
         }
-        $value = $result / $counter;
-        $this->saveIndicator($system, $value);
-        $this->value = $value;
-        return $value;
+        if ($counter > 0)
+        {
+            $result = $result / $counter;
+        }
+        return $result;
+    }
+
+    public function getDependencyByKey($key)
+    {
+        return ApplicationIndicator::where('code', substr($key, 9, strlen($key)))->first();
     }
 
     public function saveIndicator(System $system, $value)
     {
         $date = Carbon::now()->format('Y-m-d');
-        $pivot = $this->systems()->where('system_id', $system->id)->wherePivot('registered_date', $date)->get();
+        $pivot = $this->systems()->where($this->systemIdField, $system->id)->wherePivot($this->registeredDateField, $date)->get();
         if ($pivot->count() > 0)
         {
             $this->systems()
-                ->where('system_id', $system->id)
-                ->wherePivot('registered_date', $date)
-                ->updateExistingPivot($system->id, ['value' => $value, 'registered_date' => $date]);
+                ->where($this->systemIdField, $system->id)
+                ->wherePivot($this->registeredDateField, $date)
+                ->updateExistingPivot($system->id, ['value' => $value, $this->registeredDateField => $date]);
         } else
         {
-            $this->systems()->save($system, ['value' => $value, 'registered_date' => $date]);
+            $this->systems()->save($system, ['value' => $value, $this->registeredDateField => $date]);
         }
     }
+
+    public function hasRecordOnDate(System $system, $date)
+    {
+        $pivot = $this->systems()->where($this->systemIdField, $system->id)
+            ->wherePivot($this->registeredDateField, $date)->get();
+        return ($pivot->count() > 0);
+    }
+
 }

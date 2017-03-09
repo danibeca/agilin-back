@@ -17,7 +17,7 @@ class ApplicationIndicatorTest extends APITest {
     {
         $repo = $this->createMock(MetricRepository::class);
         $repo->method('getMetricValue')->willReturn(20);
-        $application = MockApplication::getOnlyApplication();
+        $application = MockApplication::getPlainApplication();
         $indicator = $this->createPartialMock(ApplicationIndicator::class, array('saveIndicator'));
         $indicator = MockApplicationIndicator::getOrUpdateIndicatorWithRules($indicator);
         $indicator->setMetricRepository($repo);
@@ -31,7 +31,7 @@ class ApplicationIndicatorTest extends APITest {
     {
         $repo = $this->createMock(MetricRepository::class);
         $repo->method('getMetricValue')->will($this->onConsecutiveCalls(20, 30, 40));
-        $application = MockApplication::getOnlyApplication();
+        $application = MockApplication::getPlainApplication();
         $indicator = $this->createPartialMock(ApplicationIndicator::class, array('saveIndicator', 'hasRecordOnDate', 'getDependencyByKey'));
         $indicator = MockApplicationIndicator::getOrUpdateIndicatorWithComplexRules($indicator);
         $indicator->setMetricRepository($repo);
@@ -41,9 +41,9 @@ class ApplicationIndicatorTest extends APITest {
         $dependency->setMetricRepository($repo);
         $indicator->method('getDependencyByKey')->willReturn($dependency);
 
+
         $result = $indicator->calculateFromRepository($application);
         $this->assertEquals(30, $result);
-
     }
 
 }

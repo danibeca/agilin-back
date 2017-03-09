@@ -41,7 +41,7 @@ class MetricRepositoryTest extends APITest {
     public function it_gets_a_metric_value()
     {
         $mock = $this->createPartialMock(MetricRepository::class, array('getRepo', 'getMetricValueFromServer'));
-        $result = $mock->getMetricValue(MockApplication::getOnlyApplication(), factory(Metric::class)->make());
+        $result = $mock->getMetricValue(MockApplication::getPlainApplication(), factory(Metric::class)->make());
         $this->assertEquals(0, $result);
     }
 
