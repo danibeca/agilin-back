@@ -134,6 +134,4 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
         }
         return $result;
     }
-
-
 }
