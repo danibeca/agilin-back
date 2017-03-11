@@ -54,22 +54,22 @@ class ApplicationIndicator extends Model {
     {
         $data = $this->calculation_data;
 
-        if ($this->metricRepository == null)
+        if ($this->metricRepository === null)
         {
             $this->metricRepository = new MetricRepository();
         }
 
         foreach (json_decode($data) as $key => $attribute)
         {
-            if (substr($key, 0, 5) === "@ind_")
+            if (str_contains($key, '@ind_'))
             {
                 $subIndicator = $this->getDependencyByKey($key);
-                $data = str_replace($key . ".value", $subIndicator->calculate($application), $data);
+                $data = str_replace($key . '.value', $subIndicator->calculate($application), $data);
             }
-            if (substr($key, 0, 5) === "@met_")
+            if (str_contains($key, '@met_'))
             {
                 $metric = Metric::where('code', substr($key, 5, strlen($key)))->first();
-                $data = str_replace($key . ".value", $this->metricRepository->getMetricValue($application, $metric), $data);
+                $data = str_replace($key . '.value', $this->metricRepository->getMetricValue($application, $metric), $data);
             }
         }
         $value = JsonLogic::apply(json_decode($this->calculation_rule), json_decode($data));

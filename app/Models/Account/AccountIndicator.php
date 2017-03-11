@@ -55,10 +55,10 @@ class AccountIndicator extends Model {
 
         foreach (json_decode($data) as $key => $attribute)
         {
-            if (substr($key, 0, 8) === "@sysInd_")
+            if (str_contains($key, '@sysInd_'))
             {
                 $systemIndicator = $this->getDependencyByKey($key);
-                $data = str_replace($key . ".value", $this->summarizeSystemIndicator($account, $systemIndicator), $data);
+                $data = str_replace($key . '.value', $this->summarizeSystemIndicator($account, $systemIndicator), $data);
             }
         }
         $value = JsonLogic::apply(json_decode($this->calculation_rule), json_decode($data));
@@ -78,7 +78,7 @@ class AccountIndicator extends Model {
         }
         if ($counter > 0)
         {
-            $result = $result / $counter;
+            $result /= $counter;
         }
         return $result;
     }

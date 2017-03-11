@@ -13,7 +13,7 @@ class MetricRepository {
 
     public function __construct($wrapperServerMetrics = null)
     {
-        if ($wrapperServerMetrics != null)
+        if ($wrapperServerMetrics !== null)
         {
             $this->wrapperServerMetrics = $wrapperServerMetrics;
         }
@@ -24,9 +24,10 @@ class MetricRepository {
     {
         $result = 0;
         $repo = $this->getRepo();
-        if (isset($repo[$metric->id . '@' . $application->id]))
+        $repoCode = $metric->id . '@' . $application->id;
+        if (isset($repo[$repoCode]))
         {
-            $result = $repo[$metric->id . '@' . $application->id];
+            $result = $repo[$repoCode];
         } else
         {
             $result = $this->getMetricValueFromServer($application, $metric);
@@ -49,7 +50,7 @@ class MetricRepository {
     public function getAllMetricFromServer(Application $application, $appCode = null)
     {
         $qaSystem = $application->qualitySystem->first();
-        if ($this->wrapperServerMetrics == null)
+        if ($this->wrapperServerMetrics === null)
         {
             $this->wrapperServerMetrics = new $qaSystem->wrapper_class($qaSystem->pivot->username, $qaSystem->pivot->password, $qaSystem->pivot->api_server_url);
             $appCode = $qaSystem->pivot->app_code;

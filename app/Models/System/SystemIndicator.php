@@ -55,10 +55,11 @@ class SystemIndicator extends Model {
 
         foreach (json_decode($data) as $key => $attribute)
         {
-            if (substr($key, 0, 9) === "@appsInd_")
+
+            if (str_contains($key,'@appsInd_'))
             {
                 $applicationIndicator = $this->getDependencyByKey($key);
-                $data = str_replace($key . ".value", $this->summarizeApplicationIndicator($system, $applicationIndicator), $data);
+                $data = str_replace($key . '.value', $this->summarizeApplicationIndicator($system, $applicationIndicator), $data);
             }
         }
         $value = JsonLogic::apply(json_decode($this->calculation_rule), json_decode($data));
@@ -77,7 +78,7 @@ class SystemIndicator extends Model {
         }
         if ($counter > 0)
         {
-            $result = $result / $counter;
+            $result /= $counter;
         }
         return $result;
     }
@@ -109,5 +110,4 @@ class SystemIndicator extends Model {
             ->wherePivot($this->registeredDateField, $date)->get();
         return ($pivot->count() > 0);
     }
-
 }

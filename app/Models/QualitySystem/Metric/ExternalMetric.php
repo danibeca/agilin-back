@@ -19,19 +19,19 @@ class ExternalMetric extends Model {
         return $this->belongsTo('Agilin\Models\QualitySystem\Metric\Metric');
     }
 
-    public function normalize($extenalMetrics)
+    public function normalize($externalMetrics)
     {
         $data = $this->normalization_data;
         foreach (json_decode($data) as $key => $attribute)
         {
-            if (substr($key, 0, 5) === "@this")
+            if (str_contains($key,'@this'))
             {
-                $data = str_replace($key . ".value", $this->value, $data);
+                $data = str_replace($key . '.value', $this->value, $data);
             }
-            if (substr($key, 0, 5) === "@ext_")
+            if (str_contains($key,'@ext_'))
             {
-                $metric_value = $extenalMetrics->where('code', substr($key, 5, strlen($key)))->first()->value;
-                $data = str_replace($key . ".value", $metric_value, $data);
+                $metric_value = $externalMetrics->where('code', substr($key, 5, strlen($key)))->first()->value;
+                $data = str_replace($key . '.value', $metric_value, $data);
             }
         }
         $this->value = JsonLogic::apply(json_decode($this->normalization_rule), json_decode($data));
