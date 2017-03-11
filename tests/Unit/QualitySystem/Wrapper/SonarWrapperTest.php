@@ -39,7 +39,7 @@ class SonarWrapperTest extends APITest {
     {
         $sonar = m::mock(SonarWrapper::class, array('', '', 'http://181.143.68.26:9000/api'))->makePartial();
         $response = MockSonar62Response::getResponseTypeTwo();
-        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getMayorCodeSmell()]));
+        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getMajorCodeSmell()]));
         $sonar->shouldReceive('getExternalMetricsTypeTwoRequest')->andReturn(array());
         $sonar->getExternalMetrics(12, collect([MockExternalMetrics::getOrUpdateTypeTwo()]));
         $this->assertTrue(true);
@@ -61,7 +61,7 @@ class SonarWrapperTest extends APITest {
     {
         $sonar = m::mock(SonarWrapper::class, array('', '', 'http://181.143.68.26:9000/api'))->makePartial();
         $response = MockSonar62Response::getResponseTypeTwo();
-        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getMayorCodeSmell()]));
+        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getMajorCodeSmell()]));
         $this->assertEquals(75, $result['mayor_code_smells']);
     }
 
@@ -70,7 +70,7 @@ class SonarWrapperTest extends APITest {
     {
         $sonar = m::mock(SonarWrapper::class, array('', '', 'http://181.143.68.26:9000/api'))->makePartial();
         $response = MockSonar63Response::getResponseTypeTwo();
-        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getMayorCodeSmell()]));
+        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getMajorCodeSmell()]));
         $this->assertEquals(4, $result['mayor_code_smells']);
     }
 
@@ -93,8 +93,20 @@ class SonarWrapperTest extends APITest {
     {
         $sonar = m::mock(SonarWrapper::class, array('', '', 'http://181.143.68.26:9000/api'))->makePartial();
         $response = MockSonar63Response::getResponseTypeTwo();
-        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getMayorCodeSmell(), MockExternalMetrics::getMinorVulnerabilities()]));
+        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getMajorCodeSmell(), MockExternalMetrics::getMinorVulnerabilities()]));
         $this->assertEquals(2, count($result));
+
+    }
+
+    /** @test */
+    public function it_gets_metric_brain_overload()
+    {
+        $sonar = m::mock(SonarWrapper::class, array('', '', 'http://181.143.68.26:9000/api'))->makePartial();
+        $response = MockSonar63Response::getResponseTypeTwo();
+        $result = $sonar->readMetricsTypeTwoResponse($response, collect([MockExternalMetrics::getTagBrainOverload()]));
+        $this->assertEquals(2,$result['brain_overload']);
+
+
     }
 
 

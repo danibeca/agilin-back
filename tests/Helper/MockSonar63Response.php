@@ -117,7 +117,7 @@ class MockSonar63Response {
       "assignee": "danibeca@github",
       "author": "danibeca@okazo.co",
       "tags": [
-        "pitfall"
+        "pitfall"        
       ],
       "creationDate": "2017-02-26T01:18:47+0100",
       "updateDate": "2017-03-04T06:53:52+0100",

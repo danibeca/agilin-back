@@ -46,7 +46,7 @@ class Sonar63WrapperTest extends APITest {
     /** @test */
     public function it_transforms_metric()
     {
-        $result = $this->sonar->transformMetric(['metric' => 'duplicated_lines_density', 'value' => 2]);
+        $result = $this->sonar->transformMetricTypeOne(['metric' => 'duplicated_lines_density', 'value' => 2]);
         $this->assertEquals(2, $result['duplicated_lines_density']);
     }
 

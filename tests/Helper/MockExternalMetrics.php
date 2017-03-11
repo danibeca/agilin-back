@@ -66,7 +66,7 @@ class MockExternalMetrics {
     }
 
 
-    public static function getMayorCodeSmell()
+    public static function getMajorCodeSmell()
     {
         $metric = self::getOrUpdateTypeTwo();
         $metric->code = 'mayor_code_smells';
@@ -74,6 +74,18 @@ class MockExternalMetrics {
         $metric->value = 0;
         return $metric;
     }
+
+
+    public static function getTagBrainOverload()
+    {
+        $metric = self::getOrUpdateTypeTwo();
+        $metric->code = 'brain_overload';
+        $metric->pattern = '{"search": "tags", "value": "brain-overload"}';
+        $metric->value = 0;
+        return $metric;
+    }
+
+
 
     public static function getMinorVulnerabilities()
     {

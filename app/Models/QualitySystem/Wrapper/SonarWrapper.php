@@ -18,7 +18,7 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
     public function __construct($username, $password, $serverAPI, $client = null, $response = null)
     {
         parent::__construct($username, $password, $serverAPI);
-        if ($client != null)
+        if ($client !== null)
         {
             $this->client = $client;
             $this->response = $response;
@@ -51,25 +51,57 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
         return $result;
     }
 
-    public function readMetricsTypeTwoResponse($response, $externametrics2)
+    public function readMetricsTypeTwoResponse($response, $extMetrics)
     {
+        $searchMetrics = array();
+        $issueMetrics = array();
+        foreach ($extMetrics as $metric)
+        {
+            $arrayPattern = json_decode($metric->pattern, true);
+            $metric->pattern = $arrayPattern;
+            if (isset($arrayPattern['search']))
+            {
+               $searchMetrics[] = $metric;
+            } else
+            {
+                $issueMetrics[] = $metric;
+            }
+        }
+
         foreach (json_decode($response, true)['issues'] as $issue)
         {
-            foreach ($externametrics2 as $extmet)
+            foreach ($issueMetrics as $issueMetric)
             {
-                if ($extmet->value == null)
+                if ($issueMetric->value === null)
                 {
-                    $extmet->value = 0;
+                    $issueMetric->value = 0;
                 }
-                $pattern = json_decode($extmet->pattern, true);
-                $comp = array_intersect_assoc($issue, $pattern);
-                if (count($pattern) <= count($comp))
+
+                $comp = array_intersect_assoc($issue, $issueMetric->pattern);
+                if (count($issueMetric->pattern) <= count($comp))
                 {
-                    $extmet->value = $extmet->value + 1;
+                    ++$issueMetric->value;
+                }
+            }
+            foreach ($searchMetrics as $searchMetric)
+            {
+                if ($searchMetric->value === null)
+                {
+                    $searchMetric->value = 0;
+                }
+
+                if (in_array($searchMetric->pattern['value'], $issue[$searchMetric->pattern['search']], true))
+                {
+                    ++$searchMetric->value;
                 }
             }
         }
-        return $externametrics2->mapWithKeys(function ($item)
+        $resultMetrics = $issueMetrics;
+        foreach ($searchMetrics as $searchMetric)
+        {
+            $resultMetrics[] = $searchMetric;
+        }
+        return collect($resultMetrics)->mapWithKeys(function ($item)
         {
             return [$item['code'] => $item['value']];
         });
