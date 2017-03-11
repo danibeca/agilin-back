@@ -22,12 +22,16 @@ class ExternalMetricTest extends APITest {
     /** @test */
     public function it_normalizes_metric_with_other_metric()
     {
-        $externalMetrics = MockExternalMetrics::getExternalMetricDependOnRule();
+        $externalMetrics = MockExternalMetrics::getCollectionDependOnRule();
         foreach ($externalMetrics->sortBy('level') as $metric)
         {
             $metric->normalize($externalMetrics);
         }
         $this->assertEquals(94.23, round($externalMetrics->first()->value, 2));
     }
+
+    /** @test */
+
+
 
 }

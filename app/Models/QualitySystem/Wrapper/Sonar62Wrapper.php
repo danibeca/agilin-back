@@ -5,7 +5,7 @@ namespace Agilin\Models\QualitySystem\Wrapper;
 
 class Sonar62Wrapper extends SonarWrapper {
 
-    public function getMetricsUrl($projectId, $stringMetrics)
+    public function getMetricsTypeOneUrl($projectId, $stringMetrics)
     {
         $result['base'] = $this->serverAPI;
         $result['resource'] = '/resources?resource=' . $projectId . '&metrics=' . $stringMetrics;
@@ -13,15 +13,16 @@ class Sonar62Wrapper extends SonarWrapper {
         return  $result;
     }
 
-    public function readResponse($response)
+    public function readMetricsTypeOneResponse($response)
     {
         return json_decode($response, true)[0]['msr'];
     }
 
-    public function transformMetric($metric)
+    public function transformMetricTypeOne($metric)
     {
         return [
             $metric['key'] => $metric['val']
         ];
     }
+
 }

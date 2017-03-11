@@ -14,6 +14,7 @@ class SystemIndicator extends Model {
     protected $table = 'system_indicator';
     protected $appends = ['value'];
     protected $systemIdField = 'system_id';
+    protected $valueField = 'value';
     protected $registeredDateField = 'registered_date';
     public $timestamps = false;
 
@@ -21,7 +22,7 @@ class SystemIndicator extends Model {
 
     public function systems()
     {
-        return $this->belongsToMany('Agilin\Models\System\System', 'system_has_indicator')->withPivot('value', 'registered_date');
+        return $this->belongsToMany('Agilin\Models\System\System', 'system_has_indicator')->withPivot($this->valueField, $this->registeredDateField);
     }
 
     public function calculate(System $system)
@@ -95,10 +96,10 @@ class SystemIndicator extends Model {
             $this->systems()
                 ->where($this->systemIdField, $system->id)
                 ->wherePivot($this->registeredDateField, $date)
-                ->updateExistingPivot($system->id, ['value' => $value, $this->registeredDateField => $date]);
+                ->updateExistingPivot($system->id, [$this->valueField => $value, $this->registeredDateField => $date]);
         } else
         {
-            $this->systems()->save($system, ['value' => $value, $this->registeredDateField => $date]);
+            $this->systems()->save($system, [$this->valueField => $value, $this->registeredDateField => $date]);
         }
     }
 

@@ -2,7 +2,6 @@
 
 namespace Agilin\Models\Account;
 
-use Agilin\Models\Application\Application;
 use Agilin\Models\System\SystemIndicator;
 use Agilin\Utils\Models\AttributeValue;
 use Carbon\Carbon;
@@ -15,6 +14,7 @@ class AccountIndicator extends Model {
     protected $table = 'account_indicator';
     protected $appends = ['value'];
     protected $accountIdField = 'account_id';
+    protected $valueField = 'value';
     protected $registeredDateField = 'registered_date';
     public $timestamps = false;
 
@@ -22,7 +22,7 @@ class AccountIndicator extends Model {
 
     public function accounts()
     {
-        return $this->belongsToMany('Agilin\Models\Account\Account', 'account_has_indicator')->withPivot('value', 'registered_date');
+        return $this->belongsToMany('Agilin\Models\Account\Account', 'account_has_indicator')->withPivot($this->valueField, $this->registeredDateField);
     }
 
     public function calculate(Account $account)
@@ -93,10 +93,10 @@ class AccountIndicator extends Model {
         {
             $this->accounts()->where($this->accountIdField, $account->id)
                 ->wherePivot($this->registeredDateField, $date)
-                ->updateExistingPivot($account->id, ['value' => $value, $this->registeredDateField => $date]);
+                ->updateExistingPivot($account->id, [$this->valueField => $value, $this->registeredDateField => $date]);
         } else
         {
-            $this->accounts()->save($account, ['value' => $value, $this->registeredDateField => $date]);
+            $this->accounts()->save($account, [$this->valueField => $value, $this->registeredDateField => $date]);
         }
     }
 

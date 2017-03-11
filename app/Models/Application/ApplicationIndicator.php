@@ -14,6 +14,8 @@ class ApplicationIndicator extends Model {
     protected $table = 'application_indicator';
     protected $appends = ['value'];
     protected $appIdField = 'application_id';
+    protected $valueField = 'value';
+    protected $registeredDateField = 'registered_date';
     protected $metricRepository;
     public $timestamps = false;
 
@@ -21,7 +23,7 @@ class ApplicationIndicator extends Model {
 
     public function applications()
     {
-        return $this->belongsToMany('Agilin\Models\Application\Application', 'application_has_indicator')->withPivot('value', 'registered_date');
+        return $this->belongsToMany('Agilin\Models\Application\Application', 'application_has_indicator')->withPivot($this->valueField, $this->registeredDateField);
     }
 
     public function calculate(Application $application)
@@ -43,7 +45,7 @@ class ApplicationIndicator extends Model {
     {
         return $this->applications()
             ->where($this->appIdField, $application->id)
-            ->wherePivot('registered_date', $date)
+            ->wherePivot($this->registeredDateField, $date)
             ->get()->first()
             ->pivot->value;
     }
@@ -81,17 +83,17 @@ class ApplicationIndicator extends Model {
         if ($this->hasRecordOnDate($application, $date))
         {
             $this->applications()->where($this->appIdField, $application->id)
-                ->wherePivot('registered_date', $date)
-                ->updateExistingPivot($application->id, ['value' => $value, 'registered_date' => $date]);
+                ->wherePivot($this->registeredDateField, $date)
+                ->updateExistingPivot($application->id, [$this->valueField => $value, $this->registeredDateField => $date]);
         } else
         {
-            $this->applications()->save($application, ['value' => $value, 'registered_date' => $date]);
+            $this->applications()->save($application, [$this->valueField => $value, $this->registeredDateField => $date]);
         }
     }
 
     public function hasRecordOnDate(Application $application, $date)
     {
-        $pivot = $this->applications()->where($this->appIdField, $application->id)->wherePivot('registered_date', $date)->get();
+        $pivot = $this->applications()->where($this->appIdField, $application->id)->wherePivot($this->registeredDateField, $date)->get();
         return ($pivot->count() > 0);
     }
 

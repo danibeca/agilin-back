@@ -1,11 +1,13 @@
 <?php
 namespace Tests\Unit\QualitySystem\Wrapper;
 
+use Agilin\Models\QualitySystem\Wrapper\Sonar63Wrapper;
 use Buzz\Client\Curl;
 use Buzz\Message\Response;
 use Mockery as m;
 use Tests\APITest;
-use Tests\Helper\MockSonarResponse;
+use Tests\Helper\MockExternalMetrics;
+use Tests\Helper\MockSonar63Response;
 
 
 class Sonar63WrapperTest extends APITest {
@@ -19,7 +21,7 @@ class Sonar63WrapperTest extends APITest {
         parent::setUp();
         $this->client = m::mock(Curl::class);
         $this->response = m::mock(Response::class);
-        $this->sonar = new \Agilin\Models\QualitySystem\Wrapper\Sonar63Wrapper('', '', 'http://181.143.68.26:9000/api', $this->client, $this->response);
+        $this->sonar = new Sonar63Wrapper('', '', 'http://181.143.68.26:9000/api', $this->client, $this->response);
     }
 
     /** @test */
@@ -27,16 +29,16 @@ class Sonar63WrapperTest extends APITest {
     {
         $projectId = 'quind-back';
         $stringMetrics = 'lines_number,complexity';
-        $result = $this->sonar->getMetricsUrl($projectId, $stringMetrics);
+        $result = $this->sonar->getMetricsTypeOneUrl($projectId, $stringMetrics);
         $this->assertEquals('http://181.143.68.26:9000/api', $result['base']);
         $this->assertEquals('/measures/component?componentKey=' . $projectId . '&metricKeys=' . $stringMetrics, $result['resource']);
     }
 
     /** @test */
-    public function it_reads_services_response()
+    public function it_reads_services_response_type_one()
     {
-        $response = MockSonarResponse::getResponse63();
-        $result = $this->sonar->readResponse($response);
+        $response = MockSonar63Response::getResponseTypeOne();
+        $result = $this->sonar->readMetricsTypeOneResponse($response);
         $this->assertEquals('sqale_index', $result[0]['metric']);
         $this->assertEquals(144, $result[0]['value']);
     }
@@ -47,4 +49,5 @@ class Sonar63WrapperTest extends APITest {
         $result = $this->sonar->transformMetric(['metric' => 'duplicated_lines_density', 'value' => 2]);
         $this->assertEquals(2, $result['duplicated_lines_density']);
     }
+
 }

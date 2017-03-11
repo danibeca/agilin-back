@@ -1,11 +1,15 @@
 <?php
 namespace Tests\Unit\QualitySystem\Wrapper;
 
+use Agilin\Models\QualitySystem\Metric\ExternalMetric;
+use Agilin\Models\QualitySystem\Wrapper\Sonar62Wrapper;
+use Agilin\Models\QualitySystem\Wrapper\SonarWrapper;
 use Buzz\Client\Curl;
 use Buzz\Message\Response;
 use Mockery as m;
 use Tests\APITest;
-use Tests\Helper\MockSonarResponse;
+use Tests\Helper\MockExternalMetrics;
+use Tests\Helper\MockSonar62Response;
 
 
 class Sonar62WrapperTest extends APITest {
@@ -20,7 +24,7 @@ class Sonar62WrapperTest extends APITest {
         parent::setUp();
         $this->client = m::mock(Curl::class);
         $this->response = m::mock(Response::class);
-        $this->sonar = new \Agilin\Models\QualitySystem\Wrapper\Sonar62Wrapper('', '', 'http://181.143.68.26:9000/api', $this->client, $this->response);
+        $this->sonar = new Sonar62Wrapper('', '', 'http://181.143.68.26:9000/api', $this->client, $this->response);
     }
 
     /** @test */
@@ -28,16 +32,16 @@ class Sonar62WrapperTest extends APITest {
     {
         $projectId = 'quind-back';
         $stringMetrics = 'lines_number,complexity';
-        $result = $this->sonar->getMetricsUrl($projectId, $stringMetrics);
+        $result = $this->sonar->getMetricsTypeOneUrl($projectId, $stringMetrics);
         $this->assertEquals('http://181.143.68.26:9000/api', $result['base']);
         $this->assertEquals('/resources?resource=' . $projectId . '&metrics=' . $stringMetrics, $result['resource']);
     }
 
     /** @test */
-    public function it_reads_services_response()
+    public function it_reads_services_response_type_one()
     {
-        $response = MockSonarResponse::getResponse();
-        $result = $this->sonar->readResponse($response);
+        $response = MockSonar62Response::getResponseTypeOne();
+        $result = $this->sonar->readMetricsTypeOneResponse($response);
         $this->assertEquals('duplicated_lines_density', $result[0]['key']);
         $this->assertEquals(7.3, $result[0]['val']);
     }
@@ -54,12 +58,14 @@ class Sonar62WrapperTest extends APITest {
     {
         $projectId = 'quind-back';
 
-        $stringMetrics = collect([factory(\Agilin\Models\QualitySystem\Metric\ExternalMetric::class)->make(),
-            factory(\Agilin\Models\QualitySystem\Metric\ExternalMetric::class)->make()]);
+        $stringMetrics = collect([factory(ExternalMetric::class)->make(),
+            factory(ExternalMetric::class)->make()]);
 
         $this->client->shouldReceive('send')->times(1);
         $this->client->shouldReceive('setVerifyPeer')->times(1);
-        $this->response->shouldReceive('getContent')->times(1)->andReturn(MockSonarResponse::getResponse());
+        $this->client->shouldReceive('setTimeout')->times(1);
+        $this->response->shouldReceive('getContent')->times(1)->andReturn(MockSonar62Response::getResponseTypeOne());
+        $this->response->shouldReceive('isOk')->times(1)->andReturn(true);
 
         $result = $this->sonar->getExternalMetrics($projectId, $stringMetrics);
 

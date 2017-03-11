@@ -63,7 +63,6 @@ class MetricRepository {
     {
         foreach ($externalMetrics->sortBy('level') as $externalMetric)
         {
-
             if (isset($externalMetricValues[$externalMetric->code]))
             {
                 $externalMetric->value = $externalMetricValues[$externalMetric->code];
@@ -89,7 +88,7 @@ class MetricRepository {
         {
             $repo[$externalMetric->metric->id . '@' . $application->id] = $externalMetric->value;
         }
-
+        session(['metricRepository' => $repo]);
         return $repo;
     }
 }

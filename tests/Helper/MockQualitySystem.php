@@ -9,7 +9,7 @@ class MockQualitySystem {
     public static function getQualitySystemWithExternalMetrics()
     {
         $qualitySystem = factory(QualitySystem::class)->make();
-        foreach (MockExternalMetrics::getExternalMetricDependOnRule() as $metric)
+        foreach (MockExternalMetrics::getCollectionDependOnRule() as $metric)
         {
             $qualitySystem->externalMetrics->add($metric);
         }

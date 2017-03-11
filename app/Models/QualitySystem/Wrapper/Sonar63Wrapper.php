@@ -6,23 +6,23 @@ use Illuminate\Support\Facades\Log;
 
 class Sonar63Wrapper extends SonarWrapper {
 
-    public function getMetricsUrl($projectId, $stringMetrics)
+    public function getMetricsTypeOneUrl($projectId, $stringMetrics)
     {
         $result['base'] = $this->serverAPI;
         $result['resource'] = '/measures/component?componentKey=' . $projectId . '&metricKeys=' . $stringMetrics;
-
         return $result;
     }
 
-    public function readResponse($response)
+    public function readMetricsTypeOneResponse($response)
     {
         return json_decode($response, true)['component']['measures'];
     }
 
-    public function transformMetric($metric)
+    public function transformMetricTypeOne($metric)
     {
         return [
             $metric['metric'] => $metric['value']
         ];
     }
+
 }

@@ -16,5 +16,5 @@ abstract class QualityPlatformWrapper {
         $this->serverAPI = $serverAPI;
     }
 
-    public abstract function getExternalMetrics($projectId, $metricCodes);
+    public abstract function getExternalMetrics($projectId, $externalMetrics);
 }

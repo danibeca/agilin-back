@@ -39,10 +39,11 @@ $factory->define(\Agilin\Models\QualitySystem\Metric\ExternalMetric::class, func
 {
     return [
         'id' => $faker->randomNumber(5),
-        'code' => $faker->randomNumber,
+        'code' => $faker->word,
         'normalization_rule' => '{ "var" : ["@this"] }',
         'normalization_data' => '{ "@this" : "@this.value" }',
-        'value' => $faker->randomFloat
+        'value' => $faker->randomFloat,
+        'type' => 1
     ];
 });
 

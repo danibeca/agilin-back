@@ -31,7 +31,57 @@ class Handler extends ExceptionHandler {
 
     public function render($request, Exception $e)
     {
+        if ($e instanceof BadRequestHttpException)
+        {
+            return $this->respondBadRequest($e->getMessage());
+        }
 
+        return $this->renderTokenExceptions($request, $e);
+    }
+
+
+    public function renderTokenExceptions($request, Exception $e)
+    {
+        if ($e instanceof TokenExpiredException)
+        {
+            return $this->respondUnauthenticated($e->getMessage());
+        }
+
+        if ($e instanceof TokenInvalidException)
+        {
+            return $this->respondBadRequest($e->getMessage());
+        }
+
+        return $this->renderJWTExceptions($request, $e);
+
+    }
+
+    public function renderJWTExceptions($request, Exception $e)
+    {
+        if ($e instanceof JWTException)
+        {
+            return $this->respondInternalErorr("Error creating token");
+        }
+        return $this->renderOtherSecurityExceptions($request, $e);
+    }
+
+    public function renderOtherSecurityExceptions($request, Exception $e)
+    {
+        if ($e instanceof UnauthorizedHttpException)
+        {
+            return $this->respondUnauthenticated($e->getMessage());
+        }
+
+        if ($e instanceof MethodNotAllowedHttpException)
+        {
+            return $this->respondMethodNotAllowed();
+        }
+
+        return $this->renderNotFoundExceptions($request, $e);
+    }
+
+    public function renderNotFoundExceptions($request, Exception $e)
+    {
         if ($e instanceof ModelNotFoundException)
         {
             return $this->respondNotFound('Resource not found');
@@ -42,12 +92,11 @@ class Handler extends ExceptionHandler {
             return $this->respondNotFound();
         }
 
-        if ($e instanceof BadRequestHttpException)
-        {
-            return $this->respondBadRequest($e->getMessage());
-        }
+        return $this->renderExternalServerExceptions($request, $e);
+    }
 
-
+    public function renderExternalServerExceptions($request, Exception $e)
+    {
         if ($e instanceof ServiceUnavailableHttpException)
         {
             return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError("Service unavailable");
@@ -55,40 +104,15 @@ class Handler extends ExceptionHandler {
 
         if ($e instanceof RequestException)
         {
+            $result = null;
             if (str_contains($e->getMessage(), 'timeout'))
             {
-                return $this->setStatusCode(IlluResponse::HTTP_REQUEST_TIMEOUT)->respondWithError("Request timeout");
+                $result = $this->setStatusCode(IlluResponse::HTTP_REQUEST_TIMEOUT)->respondWithError("Request timeout");
+            } else
+            {
+                $result = $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError($e->getMessage());
             }
-            return $this->setStatusCode(IlluResponse::HTTP_SERVICE_UNAVAILABLE)->respondWithError($e->getMessage());
-        }
-
-        return $this->renderSecurityExceptions($request, $e);
-    }
-
-    public function renderSecurityExceptions($request, Exception $e)
-    {
-        if ($e instanceof TokenExpiredException)
-        {
-            return $this->respondUnauthenticated($e->getMessage());
-        }
-        if ($e instanceof UnauthorizedHttpException)
-        {
-            return $this->respondUnauthenticated($e->getMessage());
-        }
-
-        if ($e instanceof TokenInvalidException)
-        {
-            return $this->respondBadRequest($e->getMessage());
-        }
-
-        if ($e instanceof JWTException)
-        {
-            return $this->respondInternalErorr("Error creating token");
-        }
-
-        if ($e instanceof MethodNotAllowedHttpException)
-        {
-            return $this->respondMethodNotAllowed();
+            return $result;
         }
         return parent::render($request, $e);
     }

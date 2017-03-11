@@ -31,7 +31,7 @@ class MetricRepositoryTest extends APITest {
     /** @test */
     public function it_gets_extenal_metric_from_server()
     {
-        $this->wrapper->shouldReceive('getExternalMetrics')->times(1)->andReturn(MockExternalMetrics::getExternalMetricValuesDependOnRuleFromServer());
+        $this->wrapper->shouldReceive('getExternalMetrics')->times(1)->andReturn(MockExternalMetrics::getValuesAfterReadOneTypeResponse());
         $result = $this->repository->getAllMetricFromServer(MockApplication::getApplicationWithQSandMetrics(), 'testingApp');
         $this->assertEquals(94.22, round($result[0]['value'], 2));
         $this->assertEquals(2490, $result[1]['value']);
@@ -61,7 +61,7 @@ class MetricRepositoryTest extends APITest {
     /** @test */
     public function it_gets_a_metric_from_mock_server()
     {
-        $this->wrapper->shouldReceive('getExternalMetrics')->times(1)->andReturn(MockExternalMetrics::getExternalMetricValuesDependOnRuleFromServer());
+        $this->wrapper->shouldReceive('getExternalMetrics')->times(1)->andReturn(MockExternalMetrics::getValuesAfterReadOneTypeResponse());
         $application = MockApplication::getApplicationWithQSandMetrics();
         $metric = $application->qualitySystem->first()->externalMetrics->first()->metric;
         $result = $this->repository->getMetricValue($application, $metric);
