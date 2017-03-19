@@ -3,6 +3,8 @@
 namespace Agilin\Models\QualitySystem\Wrapper;
 
 
+use Illuminate\Database\Eloquent\Collection;
+
 abstract class QualityPlatformWrapper {
 
     protected $username;
@@ -16,5 +18,5 @@ abstract class QualityPlatformWrapper {
         $this->serverAPI = $serverAPI;
     }
 
-    public abstract function getExternalMetrics($projectId, $externalMetrics);
+    public abstract function getExternalMetrics($projectId, Collection $externalMetrics);
 }

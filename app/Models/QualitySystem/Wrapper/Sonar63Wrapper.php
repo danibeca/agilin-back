@@ -2,8 +2,6 @@
 
 namespace Agilin\Models\QualitySystem\Wrapper;
 
-use Illuminate\Support\Facades\Log;
-
 class Sonar63Wrapper extends SonarWrapper {
 
     public function getMetricsTypeOneUrl($projectId, $stringMetrics)

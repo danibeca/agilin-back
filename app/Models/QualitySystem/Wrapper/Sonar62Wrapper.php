@@ -10,7 +10,7 @@ class Sonar62Wrapper extends SonarWrapper {
         $result['base'] = $this->serverAPI;
         $result['resource'] = '/resources?resource=' . $projectId . '&metrics=' . $stringMetrics;
 
-        return  $result;
+        return $result;
     }
 
     public function readMetricsTypeOneResponse($response)

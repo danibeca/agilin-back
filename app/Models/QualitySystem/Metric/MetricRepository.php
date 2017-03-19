@@ -20,7 +20,7 @@ class MetricRepository {
     }
 
 
-    public function getMetricValue(Application $application, Metric $metric)
+    public function getMetricValue(Application $application, $metric)
     {
         $result = 0;
         $repo = $this->getRepo();

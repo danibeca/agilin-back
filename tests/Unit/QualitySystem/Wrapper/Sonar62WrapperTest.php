@@ -3,12 +3,11 @@ namespace Tests\Unit\QualitySystem\Wrapper;
 
 use Agilin\Models\QualitySystem\Metric\ExternalMetric;
 use Agilin\Models\QualitySystem\Wrapper\Sonar62Wrapper;
-use Agilin\Models\QualitySystem\Wrapper\SonarWrapper;
 use Buzz\Client\Curl;
 use Buzz\Message\Response;
+use Illuminate\Database\Eloquent\Collection;
 use Mockery as m;
 use Tests\APITest;
-use Tests\Helper\MockExternalMetrics;
 use Tests\Helper\MockSonar62Response;
 
 
@@ -58,8 +57,8 @@ class Sonar62WrapperTest extends APITest {
     {
         $projectId = 'quind-back';
 
-        $stringMetrics = collect([factory(ExternalMetric::class)->make(),
-            factory(ExternalMetric::class)->make()]);
+        $stringMetrics = new Collection(collect([factory(ExternalMetric::class)->make(),
+            factory(ExternalMetric::class)->make()]));
 
         $this->client->shouldReceive('send')->times(1);
         $this->client->shouldReceive('setVerifyPeer')->times(1);
