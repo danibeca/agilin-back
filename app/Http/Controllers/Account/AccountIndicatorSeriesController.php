@@ -8,6 +8,7 @@ use Agilin\Models\Account\Account;
 use Agilin\Models\Account\AccountIndicator;
 use Agilin\Utils\Transformers\IndicatorSeriesTransformer;
 use Agilin\Utils\Transformers\IndicatorTransformer;
+use Illuminate\Support\Facades\Auth;
 
 
 class AccountIndicatorSeriesController extends ApiController {
@@ -23,12 +24,16 @@ class AccountIndicatorSeriesController extends ApiController {
     public function index($accountId, $indicatorId)
     {
         $account = Account::find($accountId);
-        $result = $account->indicators()->wherePivot('account_indicator_id', $indicatorId)
-            ->orderBy('pivot_registered_date', 'asc')
-            ->get();
+        if($account->hasAccess(Auth::guard('api')->user()))
+        {
+            $result = $account->indicators()->wherePivot('account_indicator_id', $indicatorId)
+                ->orderBy('pivot_registered_date', 'asc')
+                ->get();
 
-        return $this->respond([
-            'data' => $this->indicatorSeriesTransformer->transformCollection($result->all())
-        ]);
+            return $this->respond([
+                'data' => $this->indicatorSeriesTransformer->transformCollection($result->all())
+            ]);
+        }
+        return $this->respondNotFound();
     }
 }

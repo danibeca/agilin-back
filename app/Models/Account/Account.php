@@ -18,4 +18,14 @@ class Account extends Model {
     {
         return $this->belongsToMany('Agilin\Models\Account\AccountIndicator', 'account_has_indicator')->withPivot('value', 'registered_date');
     }
+
+    public function hasAccess($user = null)
+    {
+        $result = false;
+        if ($user !== null)
+        {
+            $result = ($this->id === $user->account_id);
+        }
+        return $result;
+    }
 }

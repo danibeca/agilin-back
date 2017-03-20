@@ -18,4 +18,24 @@ class Application extends Model {
     {
         return $this->belongsToMany('Agilin\Models\Application\ApplicationIndicator', 'application_has_indicator')->withPivot('value', 'registered_date');
     }
+
+    public function hasAccess($user = null)
+    {
+        $result = false;
+
+        if ($user !== null && $user->account !== null && $user->account->systems !== null)
+        {
+
+            foreach ($user->account->systems as $system)
+            {
+
+                if ($system->applications !== null && $system->applications->where('id', $this->id)->count() > 0)
+                {
+                    $result = true;
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
 }

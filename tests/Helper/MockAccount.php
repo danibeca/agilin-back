@@ -16,7 +16,7 @@ class MockAccount {
     public static function getAccountWithSystems()
     {
         $account = self::getPlainAccount();
-        $account->systems->add(MockSystem::getPlainSystem());
+        $account->systems->add(MockSystem::getSystemWithApplications());
         $account->systems->add(MockSystem::getPlainSystem());
         $account->systems->add(MockSystem::getPlainSystem());
         return $account;

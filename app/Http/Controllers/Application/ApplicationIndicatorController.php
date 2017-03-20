@@ -4,11 +4,10 @@ namespace Agilin\Http\Controllers\Application;
 
 
 use Agilin\Http\Controllers\ApiController;
-use Agilin\Models\Accounts\Account;
-use Agilin\Models\Accounts\AccountIndicator;
 use Agilin\Models\Application\Application;
 use Agilin\Models\Application\ApplicationIndicator;
 use Agilin\Utils\Transformers\IndicatorTransformer;
+use Illuminate\Support\Facades\Auth;
 
 
 class ApplicationIndicatorController extends ApiController {
@@ -21,14 +20,20 @@ class ApplicationIndicatorController extends ApiController {
         $this->middleware('jwt.auth');
     }
 
-    public function show($applicationId, $id)
+    public function show($applicationId, $indicatorId)
     {
         $application = Application::find($applicationId);
-        $indicator = ApplicationIndicator::find($id);
-        $indicator->calculate($application);
+        if ($application->hasAccess(Auth::guard('api')->user()))
+        {
+            $indicator = ApplicationIndicator::find($indicatorId);
+            $indicator->calculate($application);
 
-        return $this->respond([
-            'data' => $this->indicatorTransformer->transform($indicator)
-        ]);
+            return $this->respond([
+                'data' => $this->indicatorTransformer->transform($indicator)
+            ]);
+        }
+
+        return $this->respondNotFound();
+
     }
 }

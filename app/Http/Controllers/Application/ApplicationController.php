@@ -23,7 +23,6 @@ class ApplicationController extends ApiController {
 
     public function index()
     {
-
         $applicationGroups = Account::whereId(Auth::guard('api')
             ->user()->account_id)->with('systems')->get()
             ->pluck('systems')[0]->pluck('applications')->all();

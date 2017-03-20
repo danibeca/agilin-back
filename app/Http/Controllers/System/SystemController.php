@@ -1,14 +1,15 @@
 <?php
 
-namespace Agilin\Http\Controllers\Account;
+namespace Agilin\Http\Controllers\System;
 
 
 use Agilin\Http\Controllers\ApiController;
 use Agilin\Models\Account\Account;
 use Agilin\Utils\Transformers\SystemTransformer;
+use Illuminate\Support\Facades\Auth;
 
 
-class AccountSystemController extends ApiController {
+class SystemController extends ApiController {
 
     protected $systemTransformer;
 
@@ -18,13 +19,12 @@ class AccountSystemController extends ApiController {
         $this->middleware('jwt.auth');
     }
 
-    public function index($accountId)
+    public function index()
     {
-        $account = Account::find($accountId);
-        $result = $account->systems()->get();
-
         return $this->respond([
-            'data' => $this->systemTransformer->transformCollection($result->all())
+            'data' => $this->systemTransformer->transformCollection(
+                Account::find(Auth::guard('api')->user()->account_id)
+                    ->systems()->get()->all())
         ]);
     }
 }
