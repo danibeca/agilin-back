@@ -23,7 +23,8 @@ class AccountIndicatorController extends ApiController {
     public function show($accountId, $id)
     {
         $account = Account::find($accountId);
-        if($account->hasAccess(Auth::guard('api')->user())){
+        if ($account->hasAccess(Auth::guard('api')->user()))
+        {
             $indicator = AccountIndicator::find($id);
             $indicator->calculate($account);
 

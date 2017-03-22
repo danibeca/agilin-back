@@ -33,7 +33,7 @@ class ResetPasswordController extends ApiController {
     /**
      * Reset the given user's password.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function reset(Request $request)
@@ -44,7 +44,8 @@ class ResetPasswordController extends ApiController {
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
         $response = $this->broker()->reset(
-            $this->credentials($request), function ($user, $password) {
+            $this->credentials($request), function ($user, $password)
+        {
             $this->resetPassword($user, $password);
         }
         );

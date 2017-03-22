@@ -118,6 +118,7 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
         {
             $resultMetrics[] = $searchMetric;
         }
+
         return collect($resultMetrics)->mapWithKeys(function ($item)
         {
             return [$item['code'] => $item['value']];
@@ -150,6 +151,7 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
                 $this->request(
                     $this->getMetricsTypeTwoUrl($projectId, $i)), $typeTwoMetrics);
         }
+
         return $result;
     }
 
@@ -182,7 +184,8 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
         $extMetricTypeTwo = $externalMetrics->where('type', 2);
         if ($extMetricTypeTwo->count() > 0)
         {
-            foreach ((array) $this->getExternalMetricsTypeTwoRequest($projectId, $extMetricTypeTwo) as $key => $value)
+            /** @noinspection ForeachSourceInspection */
+            foreach ($this->getExternalMetricsTypeTwoRequest($projectId, $extMetricTypeTwo) as $key => $value)
             {
                 $result[$key] = $value;
             }

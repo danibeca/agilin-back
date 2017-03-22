@@ -34,7 +34,8 @@ class TokenAuthController extends ApiController {
 
     public function validateToken()
     {
-        if (Auth::guard('api')->authenticate()) {
+        if (Auth::guard('api')->authenticate())
+        {
             return $this->respond('true');
         }
     }

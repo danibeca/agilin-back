@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Application;
 
+use Agilin\Models\Application\Application;
 use Agilin\Models\Application\ApplicationIndicator;
 use Agilin\Models\QualitySystem\Metric\Metric;
 use Agilin\Models\QualitySystem\Metric\MetricRepository;
@@ -46,4 +47,12 @@ class ApplicationIndicatorTest extends APITest {
         $this->assertEquals(30, $result);
     }
 
+    /** @test */
+   /* public function test_indicator()
+    {
+        $indicator = ApplicationIndicator::find(13);
+        session(['cronRun' => true]);
+        $result = $indicator->calculate(Application::find(4));
+        self::assertTrue(true);
+    }*/
 }

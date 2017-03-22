@@ -4,11 +4,8 @@ namespace Agilin\Http\Controllers\Application;
 
 use Agilin\Http\Controllers\ApiController;
 use Agilin\Models\Account\Account;
-use Agilin\Models\Security\User;
 use Agilin\Utils\Transformers\ApplicationTransformer;
 use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Facades\JWTFactory;
 
 
 class ApplicationController extends ApiController {

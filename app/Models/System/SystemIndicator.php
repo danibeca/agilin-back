@@ -56,7 +56,7 @@ class SystemIndicator extends Model {
         foreach (json_decode($data) as $key => $attribute)
         {
 
-            if (str_contains($key,'@appsInd_'))
+            if (str_contains($key, '@appsInd_'))
             {
                 $applicationIndicator = $this->getDependencyByKey($key);
                 $data = str_replace($key . '.value', $this->summarizeApplicationIndicator($system, $applicationIndicator), $data);

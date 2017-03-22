@@ -5,7 +5,6 @@ namespace Agilin\Models\QualitySystem\Metric;
 
 
 use Agilin\Models\Application\Application;
-use Illuminate\Support\Facades\Log;
 
 class MetricRepository {
 
@@ -32,6 +31,8 @@ class MetricRepository {
         {
             $result = $this->getMetricValueFromServer($application, $metric);
         }
+
+
         return $result;
     }
 

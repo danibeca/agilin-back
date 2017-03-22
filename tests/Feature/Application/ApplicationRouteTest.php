@@ -69,7 +69,7 @@ class ApplicationRouteTest extends APITest {
             ->once()
             ->with('api')
             ->andReturn(new MockGuard());
-        $data = $this->requestJson('GET', 'api/applications/2/indicators/1/series');
+        $data = $this->requestJson('GET', 'api/applications/4/indicators/1/series');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $data->error->statusCode);
     }
 }

@@ -3,7 +3,6 @@
 namespace Agilin\Utils\Notifications;
 
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class ResetPasswordNotification extends Notification {
 

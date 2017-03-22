@@ -69,6 +69,7 @@ class ApplicationIndicator extends Model {
             if (str_contains($key, '@met_'))
             {
                 $metric = Metric::where('code', substr($key, 5, strlen($key)))->first();
+
                 $data = str_replace($key . '.value', $this->metricRepository->getMetricValue($application, $metric), $data);
             }
         }

@@ -16,9 +16,7 @@ class ExternalMetricTest extends APITest {
         $externalMetrics = factory(ExternalMetric::class, 2)->make();
         $value = $externalMetrics->first()->value;
         $externalMetrics->first()->normalize($externalMetrics);
-        $this->assertEquals($value, $externalMetrics->first()->value);
-
-
+        $this->assertEquals(round($value,2), round($externalMetrics->first()->value,2));
     }
 
     /** @test */

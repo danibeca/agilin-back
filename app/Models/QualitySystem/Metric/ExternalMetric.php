@@ -24,11 +24,11 @@ class ExternalMetric extends Model {
         $data = $this->normalization_data;
         foreach (json_decode($data) as $key => $attribute)
         {
-            if (str_contains($key,'@this'))
+            if (str_contains($key, '@this'))
             {
                 $data = str_replace($key . '.value', $this->value, $data);
             }
-            if (str_contains($key,'@ext_'))
+            if (str_contains($key, '@ext_'))
             {
                 $metric_value = $externalMetrics->where('code', substr($key, 5, strlen($key)))->first()->value;
                 $data = str_replace($key . '.value', $metric_value, $data);

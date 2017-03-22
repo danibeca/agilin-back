@@ -5,7 +5,7 @@ namespace Agilin\Utils\Notifications;
 
 use Illuminate\Notifications\Messages\SimpleMessage;
 
-class CustomMailMessage extends SimpleMessage  {
+class CustomMailMessage extends SimpleMessage {
 
     public $view = [
         'notifications.email',
@@ -20,6 +20,7 @@ class CustomMailMessage extends SimpleMessage  {
     public $attachments = [];
     public $rawAttachments = [];
     public $priority;
+
     public function view($view, array $data = [])
     {
         $this->view = $view;
@@ -34,6 +35,7 @@ class CustomMailMessage extends SimpleMessage  {
 
         return $this;
     }
+
     public function to($address)
     {
         $this->to = $address;
@@ -47,6 +49,7 @@ class CustomMailMessage extends SimpleMessage  {
 
         return $this;
     }
+
     public function replyTo($address, $name = null)
     {
         $this->replyTo = [$address, $name];
