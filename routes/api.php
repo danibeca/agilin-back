@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['cors', 'web']], function ()
 {
-    Route::resource('accounts.indicators', 'Account\AccountIndicatorController', ['only' => ['show']]);
+    Route::resource('accounts.indicators', 'Account\AccountIndicatorController', ['only' => ['show', 'index']]);
     Route::resource('accounts.indicators.series', 'Account\AccountIndicatorSeriesController', ['only' => ['index']]);
     Route::resource('systems', 'System\SystemController', ['only' => ['index']]);
     Route::resource('systems.indicators', 'System\SystemIndicatorController', ['only' => ['show']]);

@@ -9,7 +9,8 @@ class IndicatorTransformer extends Transformer {
         return [
             'id' => $indicator['id'],
             'name' => $indicator['name'],
-            'value' => $indicator['value']
+            'code' => $indicator['code'],
+            'value' => round($indicator['value'],3)
         ];
     }
 }

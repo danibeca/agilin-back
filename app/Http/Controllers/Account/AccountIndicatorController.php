@@ -20,6 +20,25 @@ class AccountIndicatorController extends ApiController {
         $this->middleware('jwt.auth');
     }
 
+    public function index($accountId)
+    {
+        $account = Account::find($accountId);
+        if ($account->hasAccess(Auth::guard('api')->user()))
+        {
+            $indicators = collect([]);
+            foreach (AccountIndicator::all() as $indicator)
+            {
+                $indicator->calculate($account);
+                $indicators->push($indicator);
+            }
+            return $this->respond([
+                'data' => $this->indicatorTransformer
+                    ->transformCollection(
+                        $indicators->all())]);
+        }
+        return $this->respondNotFound();
+    }
+
     public function show($accountId, $id)
     {
         $account = Account::find($accountId);
