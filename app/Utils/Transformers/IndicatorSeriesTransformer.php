@@ -11,7 +11,7 @@ class IndicatorSeriesTransformer extends Transformer {
     {
         return [
             'date' => Carbon::parse($indicator['pivot']['registered_date'])->format('d-m-Y'),
-            'value' => $indicator['pivot']['value']
+            'value' => round($indicator['pivot']['value'], 3)
         ];
     }
 }
