@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => ['cors', 'web']], function ()
+Route::group(['middleware' => ['api']], function ()
 {
     Route::resource('accounts.indicators', 'Account\AccountIndicatorController', ['only' => ['show', 'index']]);
     Route::resource('accounts.indicators.series', 'Account\AccountIndicatorSeriesController', ['only' => ['index']]);

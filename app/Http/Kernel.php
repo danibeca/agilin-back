@@ -4,8 +4,8 @@ namespace Agilin\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
-class Kernel extends HttpKernel
-{
+class Kernel extends HttpKernel {
+
     /**
      * The application's global HTTP middleware stack.
      *
@@ -23,17 +23,10 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
-        'web' => [
-            \Agilin\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
-
         'api' => [
-            'throttle:60,1',
-            'bindings',
+            'cors',
+            'session',
+            'lang',
         ],
     ];
 
@@ -51,5 +44,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'jwt.refresh' => \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
+        'session' => \Illuminate\Session\Middleware\StartSession::class,
+        'cors' => \Barryvdh\Cors\HandleCors::class,
+        'lang' => \Agilin\Http\Middleware\Language::class,
     ];
 }
