@@ -20,6 +20,14 @@ class SystemIndicator extends Model {
 
     use AttributeValue;
 
+    public function lrname(){
+        return $this->belongsTo('Agilin\Models\Language\Resource', 'lr_name','id');
+    }
+
+    public function getNameAttribute(){
+        return $this->lrname->language->first()->pivot->translation;
+    }
+
     public function systems()
     {
         return $this->belongsToMany('Agilin\Models\System\System', 'system_has_indicator')->withPivot($this->valueField, $this->registeredDateField);

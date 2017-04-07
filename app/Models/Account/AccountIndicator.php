@@ -12,13 +12,21 @@ use JWadhams\JsonLogic;
 class AccountIndicator extends Model {
 
     protected $table = 'account_indicator';
-    protected $appends = ['value'];
+    protected $appends = ['value','name'];
     protected $accountIdField = 'account_id';
     protected $valueField = 'value';
     protected $registeredDateField = 'registered_date';
     public $timestamps = false;
 
     use AttributeValue;
+
+    public function lrname(){
+        return $this->belongsTo('Agilin\Models\Language\Resource', 'lr_name','id');
+    }
+
+    public function getNameAttribute(){
+        return $this->lrname->language->first()->pivot->translation;
+    }
 
     public function accounts()
     {
