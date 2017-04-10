@@ -140,7 +140,7 @@ text-align: center; text-decoration: none; -webkit-text-size-adjust: none;',
 
                                     <!-- Salutation -->
                                     <p style="{{ $style['paragraph'] }}">
-                                        Saludos,<br>{{ config('app.name') }}
+                                        Saludos,<br>Quind Team
                                     </p>
 
                                 </td>
