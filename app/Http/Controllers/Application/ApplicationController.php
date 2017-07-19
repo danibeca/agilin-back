@@ -25,18 +25,11 @@ class ApplicationController extends ApiController {
             ->user()->account_id)->with('systems')->get()
             ->pluck('systems')[0]->pluck('applications')->all();
         $apps = collect([]);
-        $count = 0;
         foreach ($applicationGroups as $group)
         {
-            if ($apps->count() > 1)
+            foreach ($group as $app)
             {
-                foreach ($group as $app)
-                {
-                    $apps->push($app);
-                }
-            } else
-            {
-                $apps = $apps->union($group);
+                $apps->push($app);
             }
         }
 
