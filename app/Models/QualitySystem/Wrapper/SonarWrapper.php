@@ -158,6 +158,11 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
     public function request($url)
     {
         $request = new Request('GET', $url['resource'], $url['base']);
+
+        if (!empty($this->username))
+        {
+            $request->addHeader('Authorization: Basic ' . base64_encode($this->username . ':' . $this->password));
+        }
         $this->client->setVerifyPeer(false);
         $this->client->setTimeout(1000);
 
