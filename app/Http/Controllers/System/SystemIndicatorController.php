@@ -20,6 +20,25 @@ class SystemIndicatorController extends ApiController {
         $this->middleware('jwt.auth');
     }
 
+    public function index($systemId)
+    {
+        $system  = System::find($systemId);
+        if ($system->hasAccess(Auth::guard('api')->user()))
+        {
+            $indicators = collect([]);
+            foreach (SystemIndicator::all() as $indicator)
+            {
+                $indicator->calculate($system);
+                $indicators->push($indicator);
+            }
+            return $this->respond([
+                'data' => $this->indicatorTransformer
+                    ->transformCollection(
+                        $indicators->all())]);
+        }
+        return $this->respondNotFound();
+    }
+
     public function show($systemId, $indicatorId)
     {
         $system = System::find($systemId);
