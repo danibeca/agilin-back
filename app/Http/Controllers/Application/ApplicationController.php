@@ -6,6 +6,7 @@ use Agilin\Http\Controllers\ApiController;
 use Agilin\Models\Account\Account;
 use Agilin\Utils\Transformers\ApplicationTransformer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 
 class ApplicationController extends ApiController {
@@ -27,15 +28,18 @@ class ApplicationController extends ApiController {
         $count = 0;
         foreach ($applicationGroups as $group)
         {
-            $count++;
-            if ($group->count() > 1)
+            if ($apps->count() > 1)
             {
-                $apps = $apps->union($group);
+                foreach ($group as $app)
+                {
+                    $apps->push($app);
+                }
             } else
             {
-                $apps->push($group[0]);
+                $apps = $apps->union($group);
             }
         }
+
         return $this->respond([
             'data' => $this->applicationTransformer
                 ->transformCollection(
