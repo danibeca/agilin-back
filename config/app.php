@@ -178,6 +178,7 @@ return [
         Barryvdh\Cors\ServiceProvider::class,
 
         Sichikawa\LaravelSendgridDriver\SendgridTransportServiceProvider::class,
+        Regulus\ActivityLog\ActivityLogServiceProvider::class,
 
     ],
 
@@ -229,7 +230,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
-        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Activity' => Regulus\ActivityLog\Models\Activity::class,
 
     ],
 
