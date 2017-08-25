@@ -2,9 +2,12 @@
 
 namespace Agilin\Models\Application;
 
+use Agilin\Models\QualitySystem\Metric\MetricRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
-class Application extends Model {
+class Application extends Model
+{
 
     protected $table = 'application';
     public $timestamps = false;
@@ -36,6 +39,29 @@ class Application extends Model {
                 }
             }
         }
+
         return $result;
     }
+
+    public function getIssuesFromServer()
+    {
+        Issue::where('application_id', $this->id)->delete();
+        $metricRepository = new MetricRepository();
+        $metricRepository->getOpenIssuesFromServer($this);
+        if (! $min = DB::table('issues')->where('application_id', $this->id)->min('effort'))
+        {
+            $min = 100000000;
+        }
+        if (! $max = DB::table('issues')->where('application_id', $this->id)->max('effort'))
+        {
+            $max = 0;
+        }
+
+        return [
+            'min' => $min,
+            'max' => $max
+        ];
+
+    }
+
 }
