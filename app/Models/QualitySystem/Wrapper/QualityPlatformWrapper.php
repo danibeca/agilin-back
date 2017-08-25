@@ -3,6 +3,7 @@
 namespace Agilin\Models\QualitySystem\Wrapper;
 
 
+use Agilin\Models\Application\Application;
 use Illuminate\Database\Eloquent\Collection;
 
 abstract class QualityPlatformWrapper {
@@ -19,4 +20,6 @@ abstract class QualityPlatformWrapper {
     }
 
     public abstract function getExternalMetrics($projectId, Collection $externalMetrics);
+
+    public abstract function getOpenIssues(Application $application, $projectId);
 }

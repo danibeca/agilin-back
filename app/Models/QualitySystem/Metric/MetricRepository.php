@@ -61,6 +61,19 @@ class MetricRepository {
         return $this->assignExternalMetricValues($externalMetrics, $externalMetricValues);
     }
 
+    public function getOpenIssuesFromServer(Application $application, $appCode = null)
+    {
+        $qaSystem = $application->qualitySystem->first();
+        if ($this->wrapperServerMetrics === null)
+        {
+            $this->wrapperServerMetrics = new $qaSystem->wrapper_class($qaSystem->pivot->username, $qaSystem->pivot->password, $qaSystem->pivot->api_server_url);
+            $appCode = $qaSystem->pivot->app_code;
+        }
+
+        $this->wrapperServerMetrics->getOpenIssues($application, $appCode);
+        //return $this->assignExternalMetricValues($externalMetrics, $externalMetricValues);
+    }
+
     public function assignExternalMetricValues($externalMetrics, $externalMetricValues)
     {
         foreach ($externalMetrics->sortBy('level') as $externalMetric)
