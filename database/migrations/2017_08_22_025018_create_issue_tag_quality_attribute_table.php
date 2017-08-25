@@ -25,31 +25,6 @@ class CreateIssueTagQualityAttributeTable extends Migration
 
 
         });
-
-
-        DB::table('issue_tag_quality_attribute')->insert(
-            array(
-                array(
-                    'quality_attribute_id' => 1,
-                    'issue_tag_id' => 1
-                ),
-                array(
-                    'quality_attribute_id' => 1,
-                    'issue_tag_id' => 2
-                ),
-                array(
-                    'quality_attribute_id' => 2,
-                    'issue_tag_id' => 3
-                ),
-                array(
-                    'quality_attribute_id' => 2,
-                    'issue_tag_id' => 4
-                ),
-                array(
-                    'quality_attribute_id' => 2,
-                    'issue_tag_id' => 5
-                ),
-            ));
     }
 
     /**
