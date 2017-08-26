@@ -3,6 +3,12 @@
 namespace Agilin\Models\QualitySystem\Wrapper;
 
 
+use Agilin\Models\Application\Application;
+use Agilin\Models\Application\Issue;
+use Agilin\Models\Application\IssueImpact;
+use Agilin\Models\Application\IssueRule;
+use Agilin\Models\Application\IssueTag;
+use Agilin\Models\Application\IssueType;
 use Buzz\Client\Curl;
 use Buzz\Message\Request;
 use Buzz\Message\Response;
@@ -10,7 +16,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 
-abstract class SonarWrapper extends QualityPlatformWrapper {
+abstract class SonarWrapper extends QualityPlatformWrapper
+{
 
     protected $client;
     protected $response;
@@ -50,12 +57,14 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
     {
         $result['base'] = $this->serverAPI;
         $result['resource'] = '/issues/search?componentKeys=' . $projectId . '&statuses=OPEN,REOPENED&p=' . $page;
+
         return $result;
     }
 
     public function readNumberOfPages($response)
     {
         $paging = json_decode($response, true)['paging'];
+
         return ceil($paging['total'] / $paging['pageSize']);
     }
 
@@ -75,6 +84,7 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
                 $issueMetricsArray[] = $metric;
             }
         }
+
         return array($this->searchMetrics => $searchMetricsArray, $this->issueMetrics => $issueMetricsArray);
     }
 
@@ -119,8 +129,7 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
             $resultMetrics[] = $searchMetric;
         }
 
-        return collect($resultMetrics)->mapWithKeys(function ($item)
-        {
+        return collect($resultMetrics)->mapWithKeys(function ($item) {
             return [$item['code'] => $item['value']];
         });
     }
@@ -159,7 +168,7 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
     {
         $request = new Request('GET', $url['resource'], $url['base']);
 
-        if (!empty($this->username))
+        if (! empty($this->username))
         {
             $request->addHeader('Authorization: Basic ' . base64_encode($this->username . ':' . $this->password));
         }
@@ -168,10 +177,11 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
 
         $this->client->send($request, $this->response);
         $result = $this->response->getContent();
-        if ( ! $this->response->isOk())
+        if (! $this->response->isOk())
         {
             throw new ServiceUnavailableHttpException(null, $result);
         }
+
         return $result;
     }
 
@@ -195,6 +205,7 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
                 $result[$key] = $value;
             }
         }
+
         return $result;
     }
 
@@ -209,6 +220,82 @@ abstract class SonarWrapper extends QualityPlatformWrapper {
                 $result[$k2] = $v2;
             }
         }
+
+        return $result;
+    }
+
+
+    public function getOpenIssues(Application $application, $projectId)
+    {
+
+        $pages = $this->readNumberOfPages($this->request(
+            $this->getOpenIssuesURL($projectId)));
+
+        $pages = ($pages > 0) ? $pages : 1;
+        for ($i = 1; $i <= $pages; $i++)
+        {
+            $result = $this->readIssuesResponse($application,
+                $this->request(
+                    $this->getOpenIssuesURL($projectId, $i)));
+        }
+    }
+
+    public function readIssuesResponse(Application $application, $response)
+    {
+
+        foreach ((array) json_decode($response, true)['issues'] as $issue)
+        {
+            $internalIssue = new Issue();
+
+            $ef = '9min';
+            if(isset($issue['effort'])){
+                $ef = $issue['effort'];
+            }
+            $internalIssue->effortText = $ef;
+            $internalIssue->effort = $this->getEffortInMinute($ef);
+            $internalIssue->last = true;
+            $internalIssue->application_id = $application->id;
+            $internalIssue->type()->associate(IssueType::whereName($issue['type'])->first());
+            $internalIssue->impact()->associate(IssueImpact::whereName($issue['severity'])->first());
+            $internalIssue->message = $issue['message'];
+            if ( ! $newRule = IssueRule::whereName($issue['rule'])->get()->first()){
+                $newRule = new  IssueRule();
+                $newRule->name = $issue['rule'];
+                $newRule->save();
+            }
+            $internalIssue->rule()->associate($newRule);
+            $internalIssue->save();
+
+
+
+
+            foreach ($issue['tags'] as $tag){
+                if ( ! $newTag = IssueTag::whereName($tag)->get()->first()){
+                    $newTag = new  IssueTag();
+                    $newTag->name = $tag;
+                    $newTag->save();
+                }
+                $internalIssue->tags()->attach($newTag->id);
+            }
+
+        }
+    }
+
+    public function getEffortInMinute($timeString){
+        preg_match("/(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m?)?/",$timeString,$regx_time);
+        isset($regx_time[1]) || $regx_time[1] = 0;
+        isset($regx_time[2]) || $regx_time[2] = 0;
+        isset($regx_time[3]) || $regx_time[3] = 0;
+        return (int)$regx_time[1]*24*60 + (int)$regx_time[2]*60 + (int)$regx_time[3];
+
+    }
+
+
+    public function getOpenIssuesURL($projectId, $page = 1)
+    {
+        $result['base'] = $this->serverAPI;
+        $result['resource'] = '/issues/search?componentKeys=' . $projectId . '&statuses=OPEN,REOPENED&p=' . $page;
+
         return $result;
     }
 }
