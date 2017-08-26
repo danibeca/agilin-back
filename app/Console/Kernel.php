@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('indicatorscalculate')
-            ->hourly();
+        $schedule->command('indicator:calculate')
+            ->dailyAt('22:00');
     }
 }
