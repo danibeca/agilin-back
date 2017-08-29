@@ -16,6 +16,7 @@ class CustomMailMessage extends SimpleMessage {
     public $from = [];
     public $to = [];
     public $cc = [];
+    public $bcc = [];
     public $replyTo = [];
     public $attachments = [];
     public $rawAttachments = [];
