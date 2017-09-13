@@ -20,7 +20,7 @@ class QATransformer
 
             $countQA++;
             array_push($resultName,
-                ['balloonText'           => 'esf:<b>[[x]]</b> imp:<b>[[y]]</b><br>cantidad:<b>[[value]]</b>',
+                ['balloonText'           => 'Criticidad:<b>[[y]]</b> Esfuerzo:<b>[[x]]</b><br>Cantidad:<b>[[value]]</b>',
                  'bullet'                => 'circle',
                  'lineAlpha'             => 0,
                  'valueField'            => 'value' . $countQA,
