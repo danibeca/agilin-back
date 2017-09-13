@@ -26,6 +26,6 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('indicator:calculate')
-            ->dailyAt('05:00');
+            ->twiceDaily(1, 13);
     }
 }
