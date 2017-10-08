@@ -24,6 +24,11 @@ class Account extends Model
         return $this->hasMany('Agilin\Models\System\System')->with('applications');
     }
 
+    public function applications()
+    {
+        return $this->hasManyThrough('Agilin\Models\Application\Application', 'Agilin\Models\System\System');
+    }
+
     public function indicators()
     {
         return $this->belongsToMany('Agilin\Models\Account\AccountIndicator', 'account_has_indicator')->withPivot('value', 'registered_date');
